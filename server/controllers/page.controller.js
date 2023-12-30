@@ -2,7 +2,7 @@ module.exports.aboutPage = async (req, res) => {
 
    try {
 
-      res.render("About_us", {
+      res.render("./defaultPages/About_us", {
         title: "FintechBlog: About Us",
         layout: "../layouts/public_layout",
       });
@@ -16,7 +16,7 @@ module.exports.homepage = async (req, res) => {
 
    try {
 
-      res.render("Home_Page", {
+      res.render("./defaultPages/Home_Page", {
         title: "FintechBlog: Home Page",
         layout: "../layouts/public_layout",
       });

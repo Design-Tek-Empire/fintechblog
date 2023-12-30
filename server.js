@@ -10,8 +10,9 @@ const connectDB = require("./server/database/connection");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
-const passport = require("passport");
-const initialize = require("./server/utils/passport");
+const methodOverride = require("method-override");
+
+
 
 // load config file
 dotenv.config({ path: "./config/config.env" });
@@ -20,10 +21,6 @@ dotenv.config({ path: "./config/config.env" });
 connectDB();
 
 const Port = process.env.PORT || 8080;
-
-// load passport
-initialize(passport);
-
 
 // Middlewares
 app.use(cors());
@@ -40,6 +37,7 @@ app.set("views", path.resolve(__dirname, "views/pages"));
 
 // load body parser
 app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride("_method"));
 
 // connect flash
 app.use(flash());
@@ -50,6 +48,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    cookie: {
+      maxAge: 900000, // 15 minutes in milliseconds
+    },
   })
 );
 
@@ -59,21 +60,14 @@ app.use((req, res, next) => {
     res.locals.success_msg = req.flash("success_msg");
     res.locals.error_msg = req.flash("error_msg");
     res.locals.error = req.flash("error");
-    res.locals.user = req.user;
+    res.locals.user = req.session.user
     next();
 });
 
 
 
-// passport Middlewares
-app.use(passport.initialize());
-app.use(passport.session());
-
-
 
 // load static files
-app.use("/bcss",express.static(path.resolve(__dirname, "node_modules/bootstrap/dist/css")));
-app.use("/bjs",express.static(path.resolve(__dirname, "node_modules/bootstrap/dist/js")));
 app.use("/css", express.static(path.resolve(__dirname, "./public/css")));
 app.use("/js", express.static(path.resolve(__dirname, "./public/js")));
 app.use("/img", express.static(path.resolve(__dirname, "./public/img")));
@@ -84,6 +78,8 @@ app.use("/img", express.static(path.resolve(__dirname, "./public/img")));
 // API EndPoints
 app.use("/secure", require("./server/routes/authRoute")); // Auth Route
 app.use("/", require("./server/routes/pageRoute")); // Page Routes
+app.use("/d", require("./server/routes/dasboard")) // Dashboard Route
+app.use("/post", require("./server/routes/postRoute")) // Dashboard Route
 
 
 

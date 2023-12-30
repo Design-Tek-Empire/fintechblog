@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h2>Edit Post</h2>
+
+    <h2><%- include('../../partials/flash_messages') %> </h2>
+
+    <form action="/post/edit/<%= post.id %>?_method=PUT" method="post">
+
+        <div>
+            <input type="text" placeholder="title" name="title" value="<%=post.title %>">
+
+        </div>
+
+        <div>
+            <input type="text" placeholder="category" name="category" value="<%=post.category %>" >
+        </div>
+
+        <textarea name="description" id="" cols="30" rows="10"><%- post.description %></textarea>
+
+        <div>
+
+            <button type="submit">Publish</button>
+        </div>
+    </form>
+
+</body>
+
+</html>

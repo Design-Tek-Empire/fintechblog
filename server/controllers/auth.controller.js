@@ -1,113 +1,146 @@
-const User = require("../models/UserModel")
+const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
-const passport = require("passport");
 
+// Hangle Registration
+module.exports = {
+  // Get Registration Page
+  registerPage: async (req, res) => {
+    try {
+      res.render("./authPages/Register", {
+        title: "FintechBlog: Sign Up",
+        layout: "../layouts/public_layout",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
-// Render Registration Page (Get Request)
-module.exports.register = async (req, res) => {
-  try {
-
-    res.render("Register", {
-      title: "FintechBlog: Sign Up",
-      layout: "../layouts/public_layout",
-    });
-
-    
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-// Render Login Page (Get Request)
-module.exports.login = async (req, res) => {
-  try {
-
-    res.render("Login", {
-      title: "FintechBlog: Login",
-      layout: "../layouts/public_layout",
-    });
-
-    
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-//  Create Actuall User (Post Request)
- module.exports.createAccount = async (req, res) => {
+  // Registration Handler Function
+  register: async (req, res) => {
     const { username, email, password } = req.body;
     const errors = [];
 
-    // Validate username
-    
-    if (!username) {
-     return  errors.push({ msg: "Please provide a username" });
-    } else if (username.length < 4) {
-      errors.push({ msg: "Username is too short (min 4 characters)" });
+    // Validate inputes
+    if (username == "" && email == "" && password == "") {
+      return res.redirect("/secure/register");
     }
-
-    // Validate email
-    if (!email) {
-      errors.push({ msg: "Please provide an email" });
+    if (username == "") {
+      errors.push({ msg: "Pls Enter Your username" });
+    } else if (email == "") {
+      errors.push({ msg: "Pls Enter Your Email" });
     } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      errors.push({ msg: "Invalid email address" });
+      errors.push({ msg: "Email is Invalid" });
+    } else if (password == "") {
+      errors.push({ msg: "Provide Password" });
+    } else if (password.length < 6) {
+      errors.push({ msg: "Password should be at least 6 Characters" });
     }
 
-    // Validate password
-    if (!password) {
-      errors.push({ msg: "Please provide a password" });
-    } else if (password.length < 6) {
-      errors.push({ msg: "Password is too short (min 6 characters)" });
-    }
     // // Render the registration page with errors if any
     if (errors.length > 0) {
-     res.render("register", {
-       title: "FintechBlog: Sign Up",
-       layout: "../layouts/public_layout",
-       errors,
-       username,
-       email,
-       password,
-     });
-
-
+      res.render("./authpages/register", {
+        title: "FintechBlog: Sign Up",
+        layout: "../layouts/public_layout",
+        errors,
+        username,
+        email,
+        password,
+      });
     } else {
-       try {
-         const userExists = await User.findOne({ email: email });
-         if (userExists) {
-           req.flash("error_msg", "Account Already Exists");
-           return res.redirect("/secure/register");
-         } else {
+      try {
+        // Check if the User Already Exists with either his email or username
+        const userExists = await User.findOne({
+          $or: [{ email: email }, { username: username }],
+        });
 
-           const salt = await bcrypt.genSalt(10);
-           const hashedPassword = await bcrypt.hash(password, salt);
-           await User.create({
-             username,
-             email,
-             password: hashedPassword,
-           });
-           req.flash("success_msg", "Registration successful, Please Login");
-           res.redirect("/secure/login");
-         }
-       } catch (error) {
-         console.log(error);
-       }
-     }
-  };
+        if (userExists) {
+          req.flash("error_msg", "You can't use this credentials");
+          return res.redirect("/secure/register");
+        } else {
+          const salt = await bcrypt.genSalt(10);
+          const hashedPassword = await bcrypt.hash(password, salt);
+          await User.create({
+            username,
+            email,
+            password: hashedPassword,
+          });
+          req.flash("success_msg", "Registration successful, Please Login");
+          res.redirect("/secure/login");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },
 
-  // Actuall Login (Post Request)
-  module.exports.signIn = async(req, res, next)=>{
-     let { username, password } = req.body;
+  // Render Login Page
+  loginPage: async (req, res) => {
+    try {
+      res.render("./authPages/Login", {
+        title: "FintechBlog: Login",
+        layout: "../layouts/public_layout",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  },
 
-     if (username == "" && password == "") {
-       return res.redirect("/secure/login");
-     } 
+  // Login Handler
 
-     
+  login: async (req, res) => {
+    let { username, password } = req.body;
 
-        passport.authenticate("local", { failureRedirect: "/login" }),
-          function (req, res) {
-            res.redirect("/");
-          };
+    if (username == "" && password == "") {
+      return res.redirect("/secure/login");
+    } else if (username == "") {
+      req.flash("error_msg", "Please provide your Username");
+      return res.redirect("/secure/login");
+    } else if (password == "") {
+      req.flash("error_msg", "Enter Password to Continue");
+      return res.redirect("/secure/login");
+    }
 
-  }
+    let email = "";
+
+    email = username.includes("@") ? username : ""; // incase user chooses to login with email
+
+    try {
+      // ES6+  check if user exists in DB
+      const userExists = await User.findOne({ $or: [{ email }, { username }] });
+      if (!userExists) {
+        req.flash("error_msg", "Please Create Account");
+        res.redirect("/secure/login");
+      }
+
+      // Compare user password with Bcryptjs
+      const isCorrectPassword = await bcrypt.compareSync(
+        password,
+        userExists.password
+      );
+
+      if (!isCorrectPassword) {
+        req.flash("error_msg", "Wrong Credentials");
+        res.redirect("/secure/login");
+      }
+      // Password and username are correct, authorize the user and redirect to Dashboard
+      req.session.user = userExists;
+      req.session.isAuthorized = true;
+
+      res.redirect("/d/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  // Logout Handler
+
+  logout: async (req, res) => {
+    // Destroy the session
+    req.session.destroy((err) => {
+      if (err) {
+        console.error(err);
+      }
+      res.redirect("/");
+    });
+  },
+};
