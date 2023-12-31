@@ -11,7 +11,7 @@
 
       <h2><%- include('../../partials/flash_messages') %> </h2>
 
-    <form action="/post/create" method="post">
+    <form action="/posts/create" method="post">
 
       <div>
         <input type="text" placeholder="title" name="title" >
@@ -19,7 +19,16 @@
       </div>
 
       <div>
-        <input type="text" placeholder="category" name="category">
+        <select name="category" id="" style="margin: 10px 0px;">
+          <option value="" selected disabled>Select One</option>
+          <% if(categories.length > 0){%>
+             <% categories.forEach(cat=>{%>
+                <option value="<%= cat.title %>"><%= cat.title %></option>
+            <% }) %>
+         <% } %>
+         
+        </select>
+        
       </div>
 
       <textarea name="description" id="" cols="30" rows="10"></textarea>
@@ -28,6 +37,11 @@
 
           <button type="submit">Publish</button>
         </div>
+        <div class="" style="display: flex; flex-direction: column;">
+        <a href="/posts/all">Back to Posts</a>
+        <a href="/d/dashboard">Dashboard</a>
+        </div>
+
     </form>
     
 </body>

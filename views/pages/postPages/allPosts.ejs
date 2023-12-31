@@ -7,16 +7,22 @@
 </head>
 <body>
 
-
+      <h2><%- include('../../partials/flash_messages') %> </h2>
+   
+    <h3> <a href="/posts/create" style="text-align: right; text-emphasis: none;">Create New Post</a></h3>
+    <p><a href="/d/dashboard">Dashboard</a></p>
+   
     <% if(posts.length > 0){ %>
 
           <%  posts.forEach(post=>{ %>
+            <a href="/posts/<%=post.slug %>" style="text-decoration: none;">
 
               <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; width: 300px;">
-                 <h2 style="text-align: center; margin-bottom: 5px;"><%= post.title %></h2>
-                 <p><%= post.category %></p> <span><%=post.author.username %></span>
+                 <h2 style="text-align: center; margin-bottom: 5px;"> Title: <%= post.title %></h2>
+                 <p> Category: <%= post.category %></p> <span> Author: <%=post.author.username %></span>
                  <p style="padding: 10px 0px;"><%- post.description %></p>
               </div>
+            </a>
 
          <% }) %>
 

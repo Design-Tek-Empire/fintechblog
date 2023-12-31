@@ -79,7 +79,7 @@ app.use("/img", express.static(path.resolve(__dirname, "./public/img")));
 app.use("/secure", require("./server/routes/authRoute")); // Auth Route
 app.use("/", require("./server/routes/pageRoute")); // Page Routes
 app.use("/d", require("./server/routes/dasboard")) // Dashboard Route
-app.use("/post", require("./server/routes/postRoute")) // Dashboard Route
+app.use("/posts", require("./server/routes/postRoute")) // Dashboard Route
 app.use("/categories", require("./server/routes/categoryRoute")); // Category Route
 
 

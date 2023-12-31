@@ -32,23 +32,6 @@ module.exports = {
     }
   },
 
-  // must be an admin or must be the creator of the post
-  isAuthorized: async (req, res, next)=>{
-     try {
-       const post = await Post.findById(req.params.id);
-        if(req.session.user.role == "Admin" || req.session.user._id == post.author.toString()){
-          next ()
-        }else{
-          req.flash('error_msg', 'unauthorized action')
-          res.redirect("/d/dashboard");
-        }
-
-     } catch (error) {
-      console.log(error)
-     }
-   
-  },
-
   // Maintain case consistency
   usernameToLowerCase: (req, res, next) => {
     if (req.body.username) {
