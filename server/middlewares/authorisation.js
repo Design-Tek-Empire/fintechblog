@@ -32,6 +32,17 @@ module.exports = {
     }
   },
 
+  mustbeAdmin: (req, res, next)=>{
+   
+    if( req.session.user && req.session.user.role == 'Admin'){
+       next();
+    }else{
+      req.flash("error_msg", "Admin Access Required")
+       res.redirect("/");
+     
+    }
+  },
+
   // Maintain case consistency
   usernameToLowerCase: (req, res, next) => {
     if (req.body.username) {

@@ -1,8 +1,5 @@
 const router = require("express").Router();
-// const transporter = require("../middlewares/utils");
-const User = require("../models/UserModel");
-const bcrypt = require("bcrypt");
-const {usernameToLowerCase,  ensureGuest} = require("../middlewares/middleware");
+const {usernameToLowerCase,  ensureGuest} = require("../middlewares/authorisation");
 
 const authController = require("../controllers/auth.controller")
 

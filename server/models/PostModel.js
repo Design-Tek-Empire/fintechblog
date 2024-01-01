@@ -13,23 +13,20 @@ const postSchema = new mongoose.Schema(
   {
     title: String,
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    category: String,
+    category:{ type : String, default: "Uncategorized"},
     description: String,
     slug: {
       type: String,
       slug: "title",
-      unique: true ,
+      unique: true,
       slug_padding_size: 2,
     },
-    images: {
-      type: Array,
-      default: [],
-    },
+    image: String,
     snippet: String,
-    isApproaved: {
+    isApproved: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   { timestamps: true }
 );

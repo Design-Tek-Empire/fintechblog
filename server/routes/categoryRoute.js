@@ -1,7 +1,6 @@
 const router = require('express').Router()
-
 const catController = require('../controllers/cat.controller')
-const {authenticateUser,isAdminOrEditor, } = require("../middlewares/middleware");
+const {authenticateUser,isAdminOrEditor, } = require("../middlewares/authorisation");
 
 
 router.get("/", catController.viewAll); // view categories

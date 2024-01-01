@@ -11,6 +11,8 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
+const fileUpload = require("express-fileupload");
+const compression = require("compression");
 
 
 
@@ -22,10 +24,28 @@ connectDB();
 
 const Port = process.env.PORT || 8080;
 
+// Gzip Compression
+app.use(compression({
+  level: 6,
+}))
+
+
 // Middlewares
 app.use(cors());
 app.use(express.json());
 app.use(helmet())
+
+// Configure Content Security Policy of helmet
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", 'https://cdn.tailwindcss.com'],
+      imgSrc: ["'self'", 'https://res.cloudinary.com'], // Allow images from Cloudinary
+    },
+  })
+);
 
 
 // set view engine
@@ -41,6 +61,19 @@ app.use(methodOverride("_method"));
 
 // connect flash
 app.use(flash());
+
+// Express file uploads configuration
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: path.join(__dirname, "tmp"),
+    createParentPath: true,
+    limits: {
+      fileSize: 1024 * 1024 * 6 // 4mb max
+    },
+  })
+);
+
 
 app.use(
   session({

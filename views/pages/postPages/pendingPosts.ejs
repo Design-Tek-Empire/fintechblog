@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h2><%- include('../../partials/flash_messages') %> </h2>
+
+    <h3> <a href="/posts/create" style="text-align: right; text-emphasis: none;">Create New Post</a></h3>
+    <p><a href="/d/dashboard">Dashboard</a></p>
+
+    <p>All Unapproved Posts</p>
+
+    <% if(posts.length> 0){ %>
+
+        <% posts.forEach(post=>{ %>
+
+
+            <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; width: 300px;">
+                <% if(!post.isApproved){ %>
+                    <form action="/posts/approve/<%=post.id %>?_method=PUT" method="post">
+                        <button type="submit" style="cursor: pointer;">Approve</button>
+                    </form>
+                    <% } %>
+                        <a href="/posts/<%=post.slug %>" style="text-decoration: none;">
+                            <h2 style="text-align: center; margin-bottom: 5px;"> Title: <%= post.title %>
+                            </h2>
+                            <p> Category: <%= post.category %>
+                            </p> <span> Author: <%=post.author.username %></span>
+                            <p style="padding: 10px 0px;"><%- post.description %></p>
+                            <p>
+                                <img src="<%= post.image %>" alt="postImage" crossorigin="anonymous">
+                            </p>
+                        </a>
+            </div>
+
+
+            <% }) %>
+
+                <% } %>
+
+</body>
+
+</html>
