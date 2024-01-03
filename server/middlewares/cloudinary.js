@@ -65,7 +65,6 @@ exports.compressImg = async (req, res, next) => {
       fileSystem.unlink(req.files.image.tempFilePath, (err) => {
         if (err) throw err;
       });
-
       // Delete the Image from the uploads folder
       fileSystem.unlink(`uploads/${newFileName}`, (err) => {
         if (err) throw err;

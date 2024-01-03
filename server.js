@@ -15,7 +15,6 @@ const fileUpload = require("express-fileupload");
 const compression = require("compression");
 
 
-
 // load config file
 dotenv.config({ path: "./config/config.env" });
 
@@ -114,6 +113,7 @@ app.use("/", require("./server/routes/pageRoute")); // Page Routes
 app.use("/d", require("./server/routes/dasboard")) // Dashboard Route
 app.use("/posts", require("./server/routes/postRoute")) // Dashboard Route
 app.use("/categories", require("./server/routes/categoryRoute")); // Category Route
+app.use("/u", require("./server/routes/userRoute")) // User Route
 
 
 

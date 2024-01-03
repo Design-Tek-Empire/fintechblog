@@ -26,6 +26,8 @@ module.exports = {
       req.body.author = req.session.user._id;
       await Post.create(req.body);
 
+      // Send Email to Admin for Approval
+
       req.flash("success_msg", "Post Created, Awaiting Admin Approval");
       res.status(200).redirect("/posts/create");
     } catch (error) {

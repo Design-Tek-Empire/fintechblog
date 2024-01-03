@@ -1,7 +1,7 @@
 const router = require("express").Router()
 
 const postController = require("../controllers/post.controller")
-const {authenticateUser,isAdminOrEditor,mustbeAdmin} = require("../middlewares/authorisation");
+const {authenticateUser,isAdminOrEditor,mustBeAdmin} = require("../middlewares/authorisation");
 const { compressImg } = require("../middlewares/cloudinary")
 
 
@@ -12,9 +12,9 @@ router.get("/edit/:slug",authenticateUser,postController.editPostPage);
 router.put("/edit/:slug", authenticateUser,  postController.editPost);
 router.delete("/delete/:id", authenticateUser, postController.deletePost)
 router.get("/all", postController.viewAllPosts);
-router.get("/pending",  mustbeAdmin, postController.pendingPosts)
+router.get("/pending",   mustBeAdmin, postController.pendingPosts)
 router.get("/:slug", postController.viewSinglePost);
-router.put("/approve/:id",  mustbeAdmin, postController.approvePost)
+router.put("/approve/:id",   mustBeAdmin, postController.approvePost)
 
 
 module.exports = router

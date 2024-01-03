@@ -32,7 +32,7 @@ module.exports = {
     }
   },
 
-  mustbeAdmin: (req, res, next)=>{
+  mustBeAdmin: (req, res, next)=>{
    
     if( req.session.user && req.session.user.role == 'Admin'){
        next();
@@ -41,6 +41,16 @@ module.exports = {
        res.redirect("/");
      
     }
+  },
+
+  authorizedUser : (req, res, next) =>{
+         if (req.session.user._id === req.params.id || req.session.user.role == "Admin") {
+            next();
+         }else{
+                req.flash("error_msg", "Unauthorized Action");
+                res.redirect("/d/dashboard");
+         }
+
   },
 
   // Maintain case consistency

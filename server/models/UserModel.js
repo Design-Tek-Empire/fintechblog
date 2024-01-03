@@ -29,9 +29,8 @@ const userSchema = new mongoose.Schema(
       enum: ["Admin", "Editor", "Subscriber"],
       default: "Subscriber",
     },
-    profilePic: {
+    image: {
       type: String,
-      default: "man.png",
     },
   },
   { timestamps: true }
