@@ -1,103 +1,163 @@
 const Post = require("../models/PostModel");
-const Category = require("../models/CategoryModel")
+const logger = require("../../logger")
 
 module.exports = {
-  createPostPage: async (req, res) => {
-    try {
-      const categories = await Category.find();
-      res.render("./postPages/createPost", {
-        title: "FintechBlog: Create Post",
-        layout: "../layouts/admin_layout",
-        categories,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  },
   createPost: async (req, res) => {
     try {
       const { title } = req.body;
 
       if (!title.trim()) {
-        req.flash("error_msg", "Provide Post Title");
-        return res.redirect("/posts/create");
+        return res.status(403).json({ msg: "Post title is required" });
       }
 
       req.body.author = req.session.user._id;
-      await Post.create(req.body);
+      const newPost = await Post.create(req.body);
+
+      if (!newPost) {
+        throw new Error("Error Creating the Post");
+      }
 
       // Send Email to Admin for Approval
 
-      req.flash("success_msg", "Post Created, Awaiting Admin Approval");
-      res.status(200).redirect("/posts/create");
+      res.status(200).json(newPost);
+    } catch (error) {
+      logger.error(error);
+      return res.status(422).json({ error: error.message });
+    }
+  },
+  // Approve A Post
+  approvePost: async (req, res) => {
+    try {
+      const { status } = req.body;
+
+      const approvedPost = await Post.findByIdAndUpdate(
+        req.params.id,
+        { $set: {status} },
+        { new: true }
+      );
+
+      res.status(201).json(approvedPost);
+    } catch (error) {
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  editPost: async (req, res) => {
+
+    
+    try {
+      const { id: postId } = req.params;
+      const post = await Post.findById(postId);
+      const currentUserRole = req.session.user.role;
+
+      const isAuthorized =
+        post.author.toString() === req.session.user._id ||
+        ["Admin", "Editor"].includes(currentUserRole);
+
+      if (isAuthorized) {
+        await post.updateOne({ $set: req.body });
+        res.status(201).json("Post Updated Successfully");
+      } else {
+        logger.error("Unauthorized Action");
+        return res.status(403).json("Unauthorized Action");
+      }
+    } catch (error) {
+      logger.error(error, "Internal Server Error");
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
+  deletePost: async (req, res) => {
+    try {
+      // A contributor should never be able to delete an approved Post
+      // When an Editor Deletes, it should go to Recycle Bin, not fully deleted, can be restored by admin.
+
+      const currentUser = req.session.user; // Current User
+      const post = await Post.findById(req.params.id);
+
+      // Check if Post is Approved and Live
+      if (post.status == "Approved") {
+        // Contibutor Should never be able to reach this endPoint
+
+        if (currentUser.role !== "Contributor") {
+          // Check if current User is an Editor
+
+          if (currentUser.role !== "Admin") {
+            // Current User is Editor
+            //  Implement Achiving and sent to recycle bin
+            const deletedPost = await post.updateOne({
+              $push: {
+                deleteManager: {
+                  deletedBy: currentUser._id,
+                  deleteReason: req.body.deleteReason,
+                  deletedAt: new Date(Date.now()),
+                },
+              },
+            });
+
+            if (!deletedPost) {
+              return res
+                .status(500)
+                .json({ error: "An Error Occurred in the Server" });
+            }
+            res
+              .status(200)
+              .json({ msg: "Post deleted Awaiting Admin Confirmation" });
+          } else {
+            // Current User is Admin,
+            // Implement Permanent Delete
+            await post.deleteOne();
+            res.status(200).json({ msg: "Post Deleted Permanently" });
+          }
+        } else {
+          return res.status(403).json({ error: "Unauthorized Action" });
+        }
+      } else {
+        //  Post is either Pending or Declined.{}
+        // 1. Admin and Editor can delete posts completely here
+        // 2. The Author can Delete his/her post completely
+        if (currentUser.role !== "Contributor") {
+          await post.deleteOne();
+          return res.status(200).json({ msg: "Post Deleted" });
+        }
+
+        // Author Deletes his/her own post
+        if (post.author.toString() === currentUser._id) {
+          await post.deleteOne();
+          return res.status(200).json({ msg: "Post Deleted" });
+        } else {
+          return res.status(403).json({ error: "Unauthorized Action" });
+        }
+      }
     } catch (error) {
       console.log(error);
       res.status(500).send("Internal Server Error");
     }
   },
 
-  editPostPage: async (req, res) => {
+  restoreDeletedPost: async (req, res) => {
     try {
-      const post = await Post.findOne({ slug: req.params.slug });
-      const categories = await Category.find();
+      //  const post = await Post.findById(req.params.id)
+      const currentUser = req.session.user;
 
-      //  Check for the author
-      if (req.session.user._id == post.author.toString()) {
-        res.render("./postPages/editPost", {
-          title: "FintechBlog: Edit Post",
-          layout: "../layouts/admin_layout",
-          post,
-          categories,
-        });
-      } else {
-        req.flash("error_msg", "Unauthorized Action");
-        res.redirect(`/posts/${req.params.slug}`);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  editPost: async (req, res) => {
-    try {
-      await Post.findOneAndUpdate(
-        { slug: req.params.slug },
-        {
-          $set: req.body,
+      const updatedPost = await Post.findByIdAndUpdate(req.params.id, {
+        $set: {
+          "deleteManager.$[].status": "Restored",
+          "deleteManager.$[].restoredBy": currentUser._id,
+          "deleteManager.$[].restoreReason": req.body.restoreReason,
+          "deleteManager.$[].restoredAt": new Date(Date.now()),
         },
-        { new: true }
-      );
-      req.flash("success_msg", "Edited Successfully");
-      res.redirect(`/posts/${req.params.slug}`);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  deletePost: async (req, res) => {
-    try {
-      await Post.findByIdAndDelete(req.params.id);
-      req.flash("success_msg", "Deleted Successfully");
-      res.redirect(`/posts/all`);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  pendingPosts: async (req, res) => {
-    
-    try {
-    
-      let posts = await Post.find({ isApproved: false }) // Filter only approved Posts
-        .populate("author")
-        .sort({ createdAt: -1 })
-        .limit(10);
-
-      res.render("./postPages/pendingPosts", {
-        title: "FintechBlog: Pending Posts",
-        layout: "../layouts/public_layout",
-        posts,
       });
 
+      if (!updatedPost) {
+        return res.status(404).send("Post not found");
+      }
+
+      return res.status(200).send("Post Restored");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
     }
   },
 
@@ -105,61 +165,50 @@ module.exports = {
     const { category, author } = req.query; // filtering posts by Category and author
 
     try {
-      let posts = await Post.find({ isApproved: true }) // Filter only approved Posts
-        .populate("author")
+      // Get all posts
+      let posts = await Post.find()
+        .populate([
+          { path: "author", select: "-password -updatedAt -createdAt" },
+        ])
         .sort({ createdAt: -1 })
         .limit(10);
 
+      // Query Posts by Category or by Author
+
       if (category) {
-        posts = posts.filter((p) => p.category == category); // when a category is requested, eg all?category=Finances
+        posts = posts.filter((p) => p.category == category); // when a category is requested, eg /?category=Finances
       } else if (author) {
         posts = posts.filter((p) => p.author.username == author); // same as category above
       } else {
         posts = posts; // when no query is requested
       }
 
-      res.render("./postPages/allPosts", {
-        title: "FintechBlog: Posts",
-        layout: "../layouts/public_layout",
-        posts,
-      });
+      if(posts.length > 0){
+        res.status(200).json(posts);
+      }else{
+        res.status(404).json("No Posts found")
+      }
+
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
     }
   },
 
   viewSinglePost: async (req, res) => {
     try {
-      const post = await Post.findOne({ slug: req.params.slug }).populate(
-        "author"
-      );
+      const post = await Post.findOne({ slug: req.params.slug }).populate([
+        { path: "author", select: "-password -updatedAt -createdAt" },
+      ]);
 
-      res.render("./postPages/singlePost", {
-        title: `FintechBlog: ${post.slug}`,
-        layout: "../layouts/public_layout",
-        post,
-      });
+      if (post) {
+        res.status(201).json(post);
+      } else {
+        res.status(404).json({ error: "Post Not Found" });
+      }
     } catch (error) {
-      console.log(error);
-    }
-  },
-  approvePost: async (req, res) => {
-    try {
-      await Post.findByIdAndUpdate(
-        req.params.id,
-        {
-          $set: {
-            isApproved: true,
-          },
-        },
-        { new: true }
-      );
-
-      req.flash("success_msg", "Post Approved");
-      // Send Notification Email
-      res.redirect("/posts/all");
-    } catch (error) {
-      console.log(error);
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
     }
   },
 };

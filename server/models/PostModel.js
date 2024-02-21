@@ -13,8 +13,8 @@ const postSchema = new mongoose.Schema(
   {
     title: String,
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    category:{ type : String, default: "Uncategorized"},
-    description: String,
+    category: { type: String, default: "Uncategorized" },
+    desc: String,
     slug: {
       type: String,
       slug: "title",
@@ -23,10 +23,26 @@ const postSchema = new mongoose.Schema(
     },
     image: String,
     snippet: String,
-    isApproved: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: ["Pending", "Approved", "Declined"],
+      default: "Pending",
     },
+    deleteManager: [
+      {
+        status: {
+          type: String,
+          enum: ["Deleted", "Restored"],
+          default: "Deleted",
+        },
+        deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        restoredBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        deleteReason: { type: String },
+        restoreReason: { type: String },
+        deletedAt: { type: Date },
+        restoredAt: { type: Date },
+      },
+    ],
   },
   { timestamps: true }
 );

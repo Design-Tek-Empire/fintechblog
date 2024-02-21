@@ -1,94 +1,63 @@
 const Category = require("../models/CategoryModel");
+const logger = require("../../logger")
 
 
 module.exports = {
-  // Get create category page
-  createPage: async (req, res) => {
-    res.render("./catPages/create", {
-      title: "FintechBlog: Create Category",
-      layout: "../layouts/admin_layout",
-    });
-  },
- // handle create Category   
-  createCategory: async (req, res) => {
-    try {
+  // handle create Category
 
-   
-      const Categories = await Category.find();
+  createCategory: async (req, res) => {
+
+    try {
+      const categories = await Category.find();
 
       // validate inputs
       let { title } = req.body;
 
-      let errors = [];
-      if (title == "") {
-        errors.push({ msg: "Category name is required" });
+      if (!title.trim()) {
+        throw new Error("Category name is required");
       }
-     
-      Categories.forEach((item) => {
-        if (item.title.toLowerCase() == title.toLowerCase()) {
-          errors.push({ msg: "This Category already exists" });
+
+      categories.forEach((item) => {
+        if (item.title.toLowerCase() === title.toLowerCase()) {
+          throw new Error("This category already exists");
         }
       });
 
-      if (errors.length > 0) {
-         res.render("./catPages/create", {
-           title: "FintechBlog: Create Category",
-           layout: "../layouts/admin_layout",
-           errors
-         });
-      } else {
-        await Category.create({ title });
-        req.flash("success_msg", "Category created");
-        res.redirect("/categories/create");
-      }
+      const category = await Category.create({ title });
+      return res.status(201).json(category);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      return res.status(422).json({ error: error.message });
     }
-  },
 
+  },
 
   viewAll: async (req, res) => {
     try {
       const allCat = await Category.find();
-      res.render("./catPages/categories", {
-        title: "FintechBlog: Categories",
-        layout: "../layouts/admin_layout",
-        allCat,
-      });
+      res.status(200).json(allCat);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      return res.status(500).json({ msg: "Internal server error" });
     }
   },
 
   viewOneCategory: async (req, res) => {
+    
     try {
       const singleCategory = await Category.findById(req.params.id);
-        res.render("./catPages/singleCategory", {
-          title: `FintechBlog: ${singleCategory.title}`,
-          layout: "../layouts/admin_layout",
-          singleCategory,
-        });
-  
-    } catch (error) {
-      console.log(error)
-    }
-  },
-// Get category Edit Page
-  editcatpage: async (req, res) => {
-    try {
-      const category = await Category.findById(req.params.id);
-       res.render("./catPages/editCategory", {
-         title: `FintechBlog: ${category.title}`,
-         layout: "../layouts/admin_layout",
-         category,
-       });
+      logger.info(singleCategory)
+      res.status(200).json(singleCategory);
     } catch (error) {
       console.log(error);
+       return res.status(500).json({ msg: "Internal server error" });
     }
   },
-// Edit Category Handler
+
+  // Edit Category Handler
   editCategory: async (req, res) => {
     try {
+      const updatedCategory = 
       await Category.findByIdAndUpdate(
         req.params.id,
         {
@@ -96,20 +65,27 @@ module.exports = {
         },
         { new: true }
       );
-      req.flash("success_msg", "Category Edited Successfully");
-      res.redirect(`/categories/${req.params.id}`);
-    } catch (error) {
-     console.log(error)
+ 
+      res.status(201).json(updatedCategory)
+    } catch (err) {
+      logger.error(err);
+      return res.status(500).json({msg: "Internal Server Error"})
     }
   },
 
   deletecat: async (req, res) => {
-    try {
-      await Category.findByIdAndDelete(req.params.id);
-      req.flash("success_msg", "Category deleted Successfully");
-      res.redirect("/categories");
-    } catch (error) {
-      console.log(error);
-    }
+   try {
+     const deletedCategory = await Category.findByIdAndDelete(req.params.id);
+
+     if (deletedCategory) {
+       return res.status(200).json({ msg: "Category Deleted" });
+     } else {
+       return res.status(200).json({ msg: "Category Doesn't Exist" });
+     }
+   } catch (error) {
+     logger.error("Error deleting category:", error);
+     return res.status(500).json({ msg: "Internal Server Error" });
+   }
+
   },
 };

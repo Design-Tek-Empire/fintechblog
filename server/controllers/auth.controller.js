@@ -1,103 +1,73 @@
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
+const logger = require("../../logger")
 
 // Hangle Registration
 module.exports = {
-  // Get Registration Page
-  registerPage: async (req, res) => {
-    try {
-      res.render("./authPages/Register", {
-        title: "FintechBlog: Sign Up",
-        layout: "../layouts/public_layout",
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  },
-
   // Registration Handler Function
   register: async (req, res) => {
-    const { username, email, password } = req.body;
-    const errors = [];
+    try {
+      const { username, email, password } = req.body;
 
-    // Validate inputes
-    if (username == "" && email == "" && password == "") {
-      return res.redirect("/secure/register");
-    }
-    if (username == "") {
-      errors.push({ msg: "Pls Enter Your username" });
-    } else if (email == "") {
-      errors.push({ msg: "Pls Enter Your Email" });
-    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
-      errors.push({ msg: "Email is Invalid" });
-    } else if (password == "") {
-      errors.push({ msg: "Provide Password" });
-    } else if (password.length < 6) {
-      errors.push({ msg: "Password should be at least 6 Characters" });
-    }
+      // Validate inputes
+      if (!username || !email || !password) {
+        throw new Error("Form inputes are required");
+      }
 
-    // // Render the registration page with errors if any
-    if (errors.length > 0) {
-      res.render("./authpages/register", {
-        title: "FintechBlog: Sign Up",
-        layout: "../layouts/public_layout",
-        errors,
-        username,
-        email,
-        password,
+      if (username == "") {
+        throw new Error("Pls Enter Your username");
+      } else if (email == "") {
+        throw new Error("Pls Enter Your Email");
+      } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+        throw new Error("Email is Invalid");
+      } else if (password == "") {
+        throw new Error("Provide Password");
+      } else if (password.length < 6) {
+        throw new Error("Password should be at least 6 Characters");
+      }
+
+      // Check if the User Already Exists with either his email or username
+      const userExists = await User.findOne({
+        $or: [{ email: email }, { username: username }],
       });
-    } else {
-      try {
-        // Check if the User Already Exists with either his email or username
-        const userExists = await User.findOne({
-          $or: [{ email: email }, { username: username }],
+
+      if (userExists) {
+        return res.status(401).json({ msg: "You can't use this credentials" });
+      } else {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const user = await User.create({
+          username,
+          email,
+          password: hashedPassword,
         });
 
-        if (userExists) {
-          req.flash("error_msg", "You can't use this credentials");
-          return res.redirect("/secure/register");
-        } else {
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(password, salt);
-          await User.create({
-            username,
-            email,
-            password: hashedPassword,
-          });
-          req.flash("success_msg", "Registration successful, Please Login");
-          res.redirect("/secure/login");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  },
+        const { password: hashedPasswordFromUser, ...otherUserDetails } =
+          user._doc;
 
-  // Render Login Page
-  loginPage: async (req, res) => {
-    try {
-      res.render("./authPages/Login", {
-        title: "FintechBlog: Login",
-        layout: "../layouts/public_layout",
-      });
+        res.status(201).json(otherUserDetails);
+      }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      return res.status(422).json({ error: error.message });
     }
   },
 
   // Login Handler
 
   login: async (req, res) => {
-    let { username, password } = req.body;
 
-    if (username == "" && password == "") {
-      return res.redirect("/secure/login");
+   
+     //  A user can login with a combination either username or Email and password
+     let { username, password } = req.body;
+
+    if (!username && !password) {
+      return res.status(401).json("Inputs empty");
     } else if (username == "") {
-      req.flash("error_msg", "Please provide your Username");
-      return res.redirect("/secure/login");
+      return res.status(401).json("Provide a Username");
     } else if (password == "") {
-      req.flash("error_msg", "Enter Password to Continue");
-      return res.redirect("/secure/login");
+      return res.status(401).json("Enter Password to Continue" );
     }
 
     let email = "";
@@ -105,11 +75,10 @@ module.exports = {
     email = username.includes("@") ? username : ""; // incase user chooses to login with email
 
     try {
-      // ES6+  check if user exists in DB
+      // check if user exists in DB
       const userExists = await User.findOne({ $or: [{ email }, { username }] });
       if (!userExists) {
-        req.flash("error_msg", "Please Create Account");
-        res.redirect("/secure/login");
+        return res.status(403).json({ msg: "Please Create an account" });
       }
 
       // Compare user password with Bcryptjs
@@ -119,28 +88,33 @@ module.exports = {
       );
 
       if (!isCorrectPassword) {
-        req.flash("error_msg", "Wrong Credentials");
-        res.redirect("/secure/login");
+        return res.status(401).json({ msg: "Username or password Incorrect" });
       }
       // Password and username are correct, authorize the user and redirect to Dashboard
       req.session.user = userExists;
       req.session.isAuthorized = true;
-
-      res.redirect("/d/dashboard");
+      const { password: hashedPassword, ...others } = userExists._doc;
+      res.status(200).json(others);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      return res.status(500).json({ msg: "Internal server error" });
     }
   },
 
   // Logout Handler
 
   logout: async (req, res) => {
-    // Destroy the session
-    req.session.destroy((err) => {
-      if (err) {
-        console.error(err);
-      }
-      res.redirect("/");
-    });
+    try {
+      // Destroy the session
+      req.session.destroy((err) => {
+        if (err) {
+          logger.error(err);
+        }
+        res.status(200).json({ msg: "Logged Out" });
+      });
+    } catch (error) {
+      logger.error(error);
+      return res.status(500).json({ msg: "Internal server error" });
+    }
   },
 };

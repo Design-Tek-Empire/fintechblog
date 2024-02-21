@@ -1,70 +1,65 @@
+const logger = require("../../logger");
 const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 
 module.exports = {
-  createUser: async (req, res) => {
-    try {
-      await User.create(req.body);
-      res.redirect("/u/create");
-    } catch (error) {
-      console.log(error);
-    }
-  },
 
   viewAllUsers: async (req, res) => {
     try {
-      const allUsers = await User.find({});
-      res.render("./userPages/allUsers", {
-        title: "FintechBlog: All Users",
-        layout: "../layouts/admin_layout",
-        allUsers,
-      });
+      const allUsers = await User.find({}).select("-password -updatedAt");
+      res.status(200).json(allUsers)
+
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      return res.status(500).json({ msg: "Internal Server Error" });
     }
   },
 
   singleUser: async (req, res) => {
     try {
-      const userProfile = await User.findById(req.params.id);
-      res.render("./userPages/userProfile", {
-        title: `FintechBlog: ${userProfile.firstname}`,
-        layout: "../layouts/admin_layout",
-        userProfile,
-      });
+      const userProfile = await User.findById(req.params.id).select("-password");;
+       if(userProfile){
+         res.status(200).json(userProfile);
+       }else{
+        logger.info("No such user found")
+         res.status(404).json("No such user found");
+       }
+    
     } catch (error) {
-      console.log(error);
+        logger.error(error);
+      return res.status(500).json({ msg: "Internal Server Error" });
     }
   },
   editUser: async (req, res) => {
-    // Check if user is editing password
-    if (req.body.password) {
-      try {
-        const salt = await bcrypt.genSalt(10);
-        req.body.password = await bcrypt.hash(req.body.password, salt);
-      } catch (err) {
-        console.log(err);
-      }
-    }
+   try {
+     // Check if the user is updating the password
+     if (req.body.password) {
+       const salt = await bcrypt.genSalt(10);
+       req.body.password = await bcrypt.hash(req.body.password, salt);
+     }
 
-    try {
-      await User.findByIdAndUpdate(req.params.id, {
-        $set: req.body,
-      });
+     // Update user information
+     await User.findByIdAndUpdate(req.params.id, {
+       $set: req.body,
+     });
+      
+     // Send updated Profile
+      res.status(200).json("Profile Edited Successfully")
+   } catch (error) {
+     logger.error("Error updating user:", error);
+     res.status(500).send("Internal Server Error");
+   }
 
-      req.flash("success_msg", "Update Successful");
-      res.redirect(`/u/user/${req.params.id}`);
-    } catch (error) {
-      console.log(error);
-    }
   },
+
+
   deleteUser: async (req, res) => {
     try {
       await User.findByIdAndDelete(req.params.id);
-      req.flash("success_msg", "User Deleted");
-      res.redirect(`/u/user/allUsers`);
+      res.status(200).json({msg: "User Deleted Successfully"})
     } catch (error) {
-      console.log(error);
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
     }
   },
 };

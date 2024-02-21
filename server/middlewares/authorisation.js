@@ -1,5 +1,6 @@
 const User = require("../models/UserModel");
 const Post = require("../models/PostModel")
+const logger = require("../../logger")
 
 module.exports = {
   //
@@ -7,8 +8,8 @@ module.exports = {
     if (req.session && req.session.user) {
       return next();
     } else {
-      req.flash("error", "Login is Required");
-      return res.redirect("/secure/login");
+      logger.warn("Login required");
+      return res.status(403).json({msg: "Login is Required"});
     }
   },
   // Ensure user hasn't logged in
@@ -23,11 +24,11 @@ module.exports = {
 
   // Should be an admin or Editor to have the ability
   isAdminOrEditor: (req, res, next)=>{
-    if(req.session.user.role != 'Subscriber'){
+    if(req.session.user.role != 'Contributor'){
        return next();
     }else{
-      req.flash("error_msg", "Admin Access Required")
-       res.redirect("/");
+        logger.warn("Higher Access Level Required");
+        return res.status(403).json({ msg: "Higher Access Level Required" });
      
     }
   },
@@ -37,8 +38,8 @@ module.exports = {
     if( req.session.user && req.session.user.role == 'Admin'){
        next();
     }else{
-      req.flash("error_msg", "Admin Access Required")
-       res.redirect("/");
+      logger.fatal("Admin Access Required");
+      return res.status(403).json({ msg: "Admin Access Required" });
      
     }
   },
@@ -47,8 +48,8 @@ module.exports = {
          if (req.session.user._id === req.params.id || req.session.user.role == "Admin") {
             next();
          }else{
-                req.flash("error_msg", "Unauthorized Action");
-                res.redirect("/d/dashboard");
+               logger.warn("Unauthorized Action");
+               return res.status(403).json({ msg: "Unauthorized Action" });
          }
 
   },

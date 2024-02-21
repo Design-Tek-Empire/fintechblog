@@ -1,0 +1,484 @@
+swagger: "2.0"
+info: 
+  title: Fintech Blog
+  description: Comprehensive api documentation of fintech blog by Design Tek Empire
+  version: 1.0.1
+  contact:
+    email: ernestez12@gmail.com
+  license: 
+    name: "Apache 2.0"
+    url: http://apache.org
+servers: 
+  -locaclurl: "http://localhost:3000"
+  Local-description: This is my local server
+  -liveurl: http://fintechblog.com
+  Live-description: This is the company website
+
+schemes: [http, https]
+
+# API ENDPOINTS
+
+paths:
+  /secure/register:
+     post:
+         summary: Create a new User 
+         description: This endpoint will create a new user and save to database
+         produces:
+           - application/json
+         consumes:
+           - application/json
+         parameters:
+           - in: body 
+             name: creating a user
+             schema:
+               type: object
+               properties:
+                  username: 
+                    type: string
+                    required: true
+                  email:
+                    type: string
+                  password: 
+                    type: string
+         responses:
+            201:
+              description: Success
+            401:
+              description: Unauthrized Action
+            422:
+              description: Action Not Allowed
+            500:
+              description: Internal Server Error
+  
+  /secure/login:
+     post:
+         summary: Login a registered user 
+         description: Only fully registered user can login through this route (Username Accepts Both Email and Username)
+         produces:
+           - application/json
+         consumes:
+           - application/json
+         parameters:
+           - in: body 
+             name: Login (username or Email)
+             schema:
+               type: object
+               properties:
+                  username: 
+                    type: string
+                    required: true
+                  password: 
+                    type: string
+                   
+         responses:
+            200:
+              description: Logged in successfullly
+            401:
+              description: Provide Missing details
+            403: 
+              description: Unauthorized Action
+            500:
+              description: Internal Server Error
+       
+  /secure/logout:
+       get:
+         summary: Logout a user and Kill a session 
+         description: This endpoint kills a live session and logs a user out completely        
+         responses:
+            200:
+              description: Logged out successfullly
+            500:
+              description: Internal Server Error
+  /categories/:
+     get:
+         summary: Return All Categories
+         description: This returns all the created categories from the database
+         produces:
+           - application/json
+         responses:
+            200:
+              description: Success
+            401:
+              description: Unauthrized Action
+            422:
+              description: Action Not Allowed
+            500:
+              description: Internal Server Error
+  
+  /categories/create:
+     post:
+         summary: Create a new category
+         description: Endpoint takes a category name as string and create a new category account in database
+         produces:
+           - application/json
+         consumes:
+           - application/json
+         parameters:
+           - in: body
+             name: creating a user
+             schema:
+               type: object
+               properties: 
+                 title:
+                   type: string 
+         responses:
+            201:
+              description: Success
+            403:
+              description: You're not authenticated
+            422:
+              description: Category Already Exists
+            500:
+              description: Internal Server Error
+  
+  
+  /categories/{id}:
+     get:
+         summary: Get One category by its Id
+         description: This returns a category specified by its id in parameters
+         produces:
+           - application/json
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+         responses:
+            200:
+              description: Success
+            403:
+              description: You're not authenticated
+            422:
+              description: Category Already Exists
+            500:
+              description: Internal Server Error
+  
+  
+  /categories/edit/{id}:
+     put:
+         summary: Edit a category specified by it id
+         description: This endpoint edits any category as specified by its id in the params
+         produces:
+           - application/json
+         consumes:
+           - application/json
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: body
+             name: Title
+             schema:
+               type: string
+               properties: 
+                 title:
+                   type: string 
+         responses:
+            201:
+              description: Success
+            403:
+              description: You're not authenticated
+            422:
+              description: Category Already Exists
+            500:
+              description: Internal Server Error
+  
+  /categories/delete/{id}:
+     delete:
+         summary: Delete a category specified by it id
+         description: This endpoint deletes any category as specified by its id in the params
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+         responses:
+            200:
+              description: Success
+            403:
+              description: You're not authenticated
+            422:
+              description: Category Already Exists
+            500:
+              description: Internal Server Error
+  
+  /posts/create:
+    post:
+     summary: Create a post
+     consumes:
+      - multipart/form-data
+     parameters:
+      - in: formData
+        name: image
+        type: file
+        description: File Upload
+      - in: formData
+        name: title
+        type: string
+        required: true
+        description: Enter post title
+      - in: formData
+        name: category
+        type: string
+        enum: ["Educational", "Schooling", "Banking", "Finances"]
+      - in: formData
+        name: description
+        type: string
+        description: Write post content
+        format: textarea
+      
+     responses:
+        200:
+          description: Success
+        403:
+          description: You're not authenticated
+        500:
+          description: Internal Server Error
+
+
+  /posts/approve/{id}:
+     put:
+         summary: Approve a Post
+         description: Admins and editors can approve a post from this route
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: formData
+             name: status 
+             type: string
+             enum: ["Approved", "Declined", "Pending"]
+         responses:
+            201:
+              description: Success
+            403:
+              description: You're not authenticated
+            500:
+              description: Internal Server Error
+  
+  /posts/edit/{id}:
+     put:
+         summary: Edit  Post
+         description: Admins and post authors can edit post.
+         consumes:
+             - multipart/form-data
+         produces:
+            - application/json
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: formData
+             name: title
+             type: string
+             description: Enter new title
+           - in: formData
+             name: category
+             type: string
+             enum: ["Educational", "Schooling", "Banking", "Finances"]
+           - in: formData
+             name: desc
+             type: string
+             description: update content
+             format: textarea
+         responses:
+            201:
+              description: Success
+            403:
+              description: You're not authenticated
+            500:
+              description: Internal Server Error
+
+ 
+  /posts/delete/{id}:
+     delete:
+         summary: Delete a post specified by it id
+         description: Approaved Posts can only be deleted by Admins and Editors, If an Editor deletes, reason for deleting the post will be provided and the final deletion of the post will await admin approval else the deleted post will be trashed into recycle bin. While unapproved posts can be deleted by anyone including the post author.
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: formData
+             name: deleteReason
+             type: string
+             description: Enter reason for deleting the post
+         responses:
+            200:
+              description: Success
+            403:
+              description: You're not authenticated
+            500:
+              description: Internal Server Error
+ 
+ 
+  /posts/restore/{id}:
+     put:
+         summary: Restore a deleted post specified by it id
+         description: Admin reserves the privilege to restore a post previously deleted by an Editor
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: formData
+             name: restoreReason
+             type: string
+             description: Enter reason for restoring the post
+         responses:
+            200:
+              description: Success
+            403:
+              description: You're not authenticated
+            500:
+              description: Internal Server Error
+ 
+ 
+  /posts/:
+     get:
+         summary: Get all Posts & Query Posts by author or categories
+         description: Query the database for posts based on category or the author.
+         parameters:
+         - in: query
+           name: category 
+           type: string
+           enum: ["Banking", "Finances", "Educational",]
+         - in: query
+           name: author 
+           type: string
+         responses:
+            200:
+              description: Success
+              schema:
+               type: array
+               items: 
+                 type: object
+            404:
+              description: No posts found
+            500:
+              description: Internal server Error
+# Get A single post
+  /posts/{slug}:
+     get:
+         summary: Get a single Post specified by id
+         description: Return a single post from the database
+         parameters:
+           - name: slug
+             in: path
+             schema:
+               type: string
+         responses:
+            200:
+              description: Success
+            404:
+              description: No posts found
+            500:
+              description: Internal Server error
+# Users Route
+  /users/:
+     get:
+         summary: Get array of all Users
+         description: Admins can see a list of all users of the application
+         produces:
+           application/json
+         responses:
+            200:
+              description: Success
+            403:
+              description: Only admins can see this
+            404:
+              description: No posts found
+            500:
+              description: Internal Server error
+#  Get One User
+  /users/{id}:
+     get:
+         summary: Get one single User
+         description: Returns a user with a specified Id
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+         responses:
+            200:
+              description: Success
+            403:
+              description: Only admins can see this
+            404:
+              description: No posts found
+            500:
+              description: Internal Server error
+
+# Edit User
+
+  /users/edit/{id}:
+     put:
+         summary: Edit User Profile
+         description: Admins and the given user can edit.
+         consumes:
+             - multipart/form-data
+         produces:
+            - application/json
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: formData
+             name: image
+             type: file
+             description: Change profile picture
+           - in: formData
+             name: username
+             type: string
+             description: Username
+           - in: formData
+             name: firstname
+             type: string
+             description: First Name
+           - in: formData
+             name: lastname
+             type: string
+             description: Last Name
+           - in: formData
+             name: email
+             type: string
+             description: Email
+           - in: formData
+             name: password
+             type: string
+             description: Password
+         responses:
+            201:
+              description: Success
+            403:
+              description: You're not authenticated
+            500:
+              description: Internal Server Error
+
+
+ 
+# Delete a User
+  /users/delete/{id}:
+     delete:
+         summary: Delete A user
+         description: Admins and the given user can delete.
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+         responses:
+            200:
+              description: Success
+            403:
+              description: You're not authenticated
+            500:
+              description: Internal Server Error
+
+
+ 
