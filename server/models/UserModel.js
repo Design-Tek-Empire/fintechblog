@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       min: 6,
     },
-
     role: {
       type: String,
       enum: ["Admin", "Editor", "Partner", "Contributor"],
@@ -32,6 +31,7 @@ const userSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    bookmarks: { type: Array, default: [] },
   },
   { timestamps: true }
 );

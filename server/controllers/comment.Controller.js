@@ -1,166 +1,121 @@
 const Comment = require("../models/Comments");
+const logger = require("../../logger")
+const Post = require("../models/PostModel")
 
 
 module.exports = {
   createComment: async (req, res) => {
     try {
-      // const { title } = req.body;
+      const { full_name, email, comment, postId } = req.body;
 
-      // if (!title.trim()) {
-      //   return res.status(403).json({ msg: "Post title is required" });
-      // }
+      if (!req.session.user) {
+        // Blogger reader is not logged in
+        if (full_name == "" || email == "") {
+          return res.status(403).json("Fill all input fields");
+        } else if (comment.trim() == "") {
+          return res.status(403).json("You can't post an empty comment");
+        }
 
-      // req.body.author = req.session.user._id;
-      // const newPost = await Post.create(req.body);
-
-      // if (!newPost) {
-      //   throw new Error("Error Creating the Post");
-      // }
-
-      // // Send Email to Admin for Approval
-
-      // res.status(200).json(newPost);
-
+        const newComment = await Comment.create({
+          full_name,
+          email,
+          comment,
+          postId,
+        });
+        res.status(201).json(newComment);
+      } else {
+        req.body.full_name = req.session.user.full_name;
+        req.body.email = req.session.user.email;
+        req.body.postId = postId;
+        req.body.comment = comment;
+        req.body.author = req.session.user._id; // For a user that does't have first or last name
+        // validate comment input
+        if (comment == "") {
+          logger.info("Empty Content not allowed");
+          return res.status(403).json("Empty Comment not allowed");
+        } else {
+          const newComment = await Comment.create(req.body);
+          res.status(201).json(newComment);
+        }
+      }
     } catch (error) {
-      console.error(error);
-      return res.status(422).json({ error: error.message });
+      logger.error(error);
+      return res.status(500).json("Internal Server Error");
     }
   },
 
+  editComment: async (req, res) => {
+    try {
+      const comment = await Comment.findById(req.params.id);
+      const currentUserRole = req.session.user.role;
 
-  // editComment: async (req, res) => {
-  //   try {
-  //     const { id: postId } = req.params;
-  //     const post = await Post.findById(postId);
-  //     const currentUserRole = req.session.user.role;
+      // Check if the comment was written by a registered user and the registered user is the owner author of the comment or the current User is admin or Editor
+      if (
+        (comment?.author &&
+          comment.author.toString() === req.session.user._id) ||
+        ["Admin", "Editor"].includes(currentUserRole)
+      ) {
+        await comment.updateOne({ $set: req.body });
+        res.status(201).json("Update Successfull");
+      } else {
+        // The comment was not written by a registered user and the current user isn't an Admin or Editor
+        if (comment.email === req.session.user.email) {
+          // When the comment was written, the non-registered user dropped his email and Fullnames.
+          await comment.updateOne({ $set: req.body });
+          res.status(201).json("Update Successfull");
+        } else {
+          return res.status(403).json("Unauthorized Action");
+        }
+      }
+    } catch (error) {
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
 
-  //     const isAuthorized =
-  //       post.author.toString() === req.session.user._id ||
-  //       ["Admin", "Editor"].includes(currentUserRole);
+  deleteComment: async (req, res) => {
+    try {
+      // A contributor should never be able to delete an approved Post
+      // When an Editor Deletes, it should go to Recycle Bin, not fully deleted, can be restored by admin.
 
-  //     if (isAuthorized) {
-  //       await post.updateOne({ $set: req.body });
-  //       res.status(201).json(post);
-  //     } else {
-  //       return res.status(403).json({ error: "Unauthorized Action" });
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send("Internal Server Error");
-  //   }
-  // },
+      const currentUserRole = req.session.user.role; // Current User
+      const commentToDelete = await Comment.findById(req.params.id);
 
-  // deleteComment: async (req, res) => {
-  //   try {
-  //     // A contributor should never be able to delete an approved Post
-  //     // When an Editor Deletes, it should go to Recycle Bin, not fully deleted, can be restored by admin.
+      if (
+        (commentToDelete?.author &&
+          commentToDelete.author.toString() === req.session.user._id) ||
+        ["Admin", "Editor"].includes(currentUserRole)
+      ) {
+        await commentToDelete.deleteOne();
+        res.status(200).json("Delete Successfull");
+      } else {
+        // The comment was not written by a registered user and the current user isn't an Admin or Editor
+        if (commentToDelete.email === req.session.user.email) {
+          // When the comment was written, the non-registered user dropped his email and Fullnames.
+          await commentToDelete.deleteOne();
+          res.status(201).json("Deleted Successfull");
+        } else {
+          return res.status(403).json("Unauthorized Action");
+        }
+      }
+    } catch (error) {
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
 
-  //     const currentUser = req.session.user; // Current User
-  //     const post = await Post.findById(req.params.id);
+  viewAllComments: async (req, res) => {
+    try {
+      const allComments = await Comment.find({ postId: req.params.postId });
 
-  //     // Check if Post is Approved and Live
-  //     if (post.status == "Approved") {
-  //       // Contibutor Should never be able to reach this endPoint
-
-  //       if (currentUser.role !== "Contributor") {
-  //         // Check if current User is an Editor
-
-  //         if (currentUser.role !== "Admin") {
-  //           // Current User is Editor
-  //           //  Implement Achiving and sent to recycle bin
-  //           const deletedPost = await post.updateOne({
-  //             $push: {
-  //               deleteManager: {
-  //                 deletedBy: currentUser._id,
-  //                 deleteReason: req.body.deleteReason,
-  //                 deletedAt: new Date(Date.now()),
-  //               },
-  //             },
-  //           });
-
-  //           if (!deletedPost) {
-  //             return res
-  //               .status(500)
-  //               .json({ error: "An Error Occurred in the Server" });
-  //           }
-  //           res
-  //             .status(200)
-  //             .json({ msg: "Post deleted Awaiting Admin Confirmation" });
-  //         } else {
-  //           // Current User is Admin,
-  //           // Implement Permanent Delete
-  //           await post.deleteOne();
-  //           res.status(200).json({ msg: "Post Deleted Permanently" });
-  //         }
-  //       } else {
-  //         return res.status(403).json({ error: "Unauthorized Action" });
-  //       }
-  //     } else {
-  //       //  Post is either Pending or Declined.{}
-  //       // 1. Admin and Editor can delete posts completely here
-  //       // 2. The Author can Delete his/her post completely
-  //       if (currentUser.role !== "Contributor") {
-  //         await post.deleteOne();
-  //         return res.status(200).json({ msg: "Post Deleted" });
-  //       }
-
-  //       // Author Deletes his/her own post
-  //       if (post.author.toString() === currentUser._id) {
-  //         await post.deleteOne();
-  //         return res.status(200).json({ msg: "Post Deleted" });
-  //       } else {
-  //         return res.status(403).json({ error: "Unauthorized Action" });
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send("Internal Server Error");
-  //   }
-  // },
-
-
-  // viewAllComment: async (req, res) => {
-  //   const { category, author } = req.query; // filtering posts by Category and author
-
-  //   try {
-  //     // Get all posts
-  //     let posts = await Post.find()
-  //       .populate([
-  //         { path: "author", select: "-password -updatedAt -createdAt" },
-  //       ])
-  //       .sort({ createdAt: -1 })
-  //       .limit(10);
-
-  //     // Query Posts by Category or by Author
-
-  //     if (category) {
-  //       posts = posts.filter((p) => p.category == category); // when a category is requested, eg /?category=Finances
-  //     } else if (author) {
-  //       posts = posts.filter((p) => p.author.username == author); // same as category above
-  //     } else {
-  //       posts = posts; // when no query is requested
-  //     }
-
-  //     res.status(200).json(posts);
-  //   } catch (error) {
-  //     console.log(error);
-  //     res.status(500).send("Internal Server Error");
-  //   }
-  // },
-
-  // viewSingleComment: async (req, res) => {
-  //   try {
-  //     const post = await Post.findOne({ slug: req.params.slug }).populate([
-  //       { path: "author", select: "-password -updatedAt -createdAt" },
-  //     ]);
-
-  //     if (post) {
-  //       res.status(201).json(post);
-  //     } else {
-  //       res.status(404).json({ error: "Post Not Found" });
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // },
+      if (allComments.length > 0) {
+        res.status(200).json(allComments);
+      } else {
+        res.status(404).json("No comments found");
+      }
+    } catch (error) {
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
 };

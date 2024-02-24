@@ -1,5 +1,6 @@
 const Post = require("../models/PostModel");
-const logger = require("../../logger")
+const logger = require("../../logger");
+const User = require("../models/UserModel");
 
 module.exports = {
   createPost: async (req, res) => {
@@ -32,7 +33,7 @@ module.exports = {
 
       const approvedPost = await Post.findByIdAndUpdate(
         req.params.id,
-        { $set: {status} },
+        { $set: { status } },
         { new: true }
       );
 
@@ -44,8 +45,6 @@ module.exports = {
   },
 
   editPost: async (req, res) => {
-
-    
     try {
       const { id: postId } = req.params;
       const post = await Post.findById(postId);
@@ -151,7 +150,7 @@ module.exports = {
       });
 
       if (!updatedPost) {
-        return res.status(404).send("Post not found");
+        return res.status(204).send("Post not found");
       }
 
       return res.status(200).send("Post Restored");
@@ -183,12 +182,11 @@ module.exports = {
         posts = posts; // when no query is requested
       }
 
-      if(posts.length > 0){
+      if (posts.length > 0) {
         res.status(200).json(posts);
-      }else{
-        res.status(404).json("No Posts found")
+      } else {
+        res.status(204).json("No Posts found");
       }
-
     } catch (error) {
       logger.error(error);
       res.status(500).send("Internal Server Error");
@@ -197,18 +195,110 @@ module.exports = {
 
   viewSinglePost: async (req, res) => {
     try {
-      const post = await Post.findOne({ slug: req.params.slug }).populate([
+      const post = await Post.findById(req.params.id).populate([
         { path: "author", select: "-password -updatedAt -createdAt" },
       ]);
 
       if (post) {
         res.status(201).json(post);
       } else {
-        res.status(404).json({ error: "Post Not Found" });
+        res.status(204).json({ error: "Post Not Found" });
       }
     } catch (error) {
       logger.error(error);
       res.status(500).send("Internal Server Error");
+    }
+  },
+  likePost: async (req, res) => {
+    // Extract current postId from the body
+
+    const { postId } = req.body;
+
+    try {
+      const post = await Post.findById(postId);
+
+      if (!post.likes.includes(req.session.user._id)) {
+        // If current user hasn't previously liked the post then update likes
+        await post.updateOne({
+          $push: { likes: req.session.user._id },
+        });
+        return res.status(201).json("Post Liked");
+      } else {
+        //  If current User already liked, then unlike the post
+        await post.updateOne({
+          $pull: { likes: req.session.user._id },
+        });
+        return res.status(201).json("Post disliked");
+      }
+    } catch (error) {
+      logger.error(error);
+    }
+  },
+  bookmark: async (req, res) => {
+    // Extract current postId from the body
+
+    const { postId } = req.body;
+    const currentUser = req.session.user;
+
+    try {
+      const post = await Post.findById(postId);
+
+      if (!post.bookmarks.includes(currentUser._id)) {
+        // If current user hasn't previously liked the post then update likes
+        await post.updateOne({
+          $push: { bookmarks: { userId: currentUser._id } },
+        });
+        await User.findOneAndUpdate(
+          { _id: currentUser._id },
+          {
+            $push: { bookmarks: { postId } },
+          }
+        );
+        return res.status(201).json("Post Bookmarked");
+      } else {
+        //  If current User already liked, then unlike the post
+        await post.updateOne({
+          $pull: { bookmarks: { userId: currentUser._id } },
+        });
+
+        await User.findOneAndUpdate(
+          { _id: currentUser._id },
+          {
+            $pull: { bookmarks: { postId } },
+          }
+        );
+
+        return res.status(201).json("Bookmark removed");
+      }
+    } catch (error) {
+      logger.error(error);
+    }
+  },
+
+  userBookmarks: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const user = req.session.user;
+
+      // Check if the user is Admin, Editor, or the same user as requested
+      if (
+        user.role !== "Admin" &&
+        user.role !== "Editor" &&
+        user._id !== userId
+      ) {
+        return res.status(403).json({ err: "Forbidden" });
+      }
+      const bookmarksAr = await Post.find({
+        bookmarks: { $elemMatch: { userId: userId } },
+      });
+
+      if (bookmarksAr.length > 0) {
+        res.status(200).json(bookmarksAr);
+      } else {
+        return res.status(204).json("No Bookmarks Found");
+      }
+    } catch (err) {
+      logger.error(err);
     }
   },
 };

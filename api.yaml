@@ -89,6 +89,102 @@ paths:
               description: Logged out successfullly
             500:
               description: Internal Server Error
+  
+  
+# Users Route
+  /users/:
+     get:
+         summary: Get array of all Users
+         description: Admins can see a list of all users of the application
+         produces:
+           application/json
+         responses:
+            200:
+              description: Success
+            403:
+              description: Only admins can see this
+            204:
+              description: No posts found
+            500:
+              description: Internal Server error
+  /users/{id}:
+     get:
+         summary: Get one single User
+         description: Returns a user with a specified Id
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+         responses:
+            200:
+              description: Success
+            403:
+              description: Only admins can see this
+            204:
+              description: No posts found
+            500:
+              description: Internal Server error
+  /users/edit/{id}:
+     put:
+         summary: Edit User Profile
+         description: Admins and the given user can edit.
+         consumes:
+             - multipart/form-data
+         produces:
+            - application/json
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: formData
+             name: image
+             type: file
+             description: Change profile picture
+           - in: formData
+             name: username
+             type: string
+             description: Username
+           - in: formData
+             name: firstname
+             type: string
+             description: First Name
+           - in: formData
+             name: lastname
+             type: string
+             description: Last Name
+           - in: formData
+             name: email
+             type: string
+             description: Email
+           - in: formData
+             name: password
+             type: string
+             description: Password
+         responses:
+            201:
+              description: Success
+            403:
+              description: You're not authenticated
+            500:
+              description: Internal Server Error
+  /users/delete/{id}:
+     delete:
+         summary: Delete A user
+         description: Admins and the given user can delete.
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+         responses:
+            200:
+              description: Success
+            403:
+              description: You're not authenticated
+            500:
+              description: Internal Server Error
   /categories/:
      get:
          summary: Return All Categories
@@ -131,7 +227,6 @@ paths:
             500:
               description: Internal Server Error
   
-  
   /categories/{id}:
      get:
          summary: Get One category by its Id
@@ -152,7 +247,6 @@ paths:
               description: Category Already Exists
             500:
               description: Internal Server Error
-  
   
   /categories/edit/{id}:
      put:
@@ -236,7 +330,6 @@ paths:
         500:
           description: Internal Server Error
 
-
   /posts/approve/{id}:
      put:
          summary: Approve a Post
@@ -292,7 +385,6 @@ paths:
             500:
               description: Internal Server Error
 
- 
   /posts/delete/{id}:
      delete:
          summary: Delete a post specified by it id
@@ -313,7 +405,6 @@ paths:
               description: You're not authenticated
             500:
               description: Internal Server Error
- 
  
   /posts/restore/{id}:
      put:
@@ -336,7 +427,6 @@ paths:
             500:
               description: Internal Server Error
  
- 
   /posts/:
      get:
          summary: Get all Posts & Query Posts by author or categories
@@ -356,129 +446,193 @@ paths:
                type: array
                items: 
                  type: object
-            404:
+            204:
               description: No posts found
             500:
               description: Internal server Error
 # Get A single post
-  /posts/{slug}:
+  /posts/{id}:
      get:
          summary: Get a single Post specified by id
          description: Return a single post from the database
          parameters:
-           - name: slug
+           - name: id
              in: path
              schema:
                type: string
          responses:
             200:
               description: Success
-            404:
+            204:
               description: No posts found
             500:
               description: Internal Server error
-# Users Route
-  /users/:
-     get:
-         summary: Get array of all Users
-         description: Admins can see a list of all users of the application
-         produces:
-           application/json
-         responses:
-            200:
-              description: Success
-            403:
-              description: Only admins can see this
-            404:
-              description: No posts found
-            500:
-              description: Internal Server error
-#  Get One User
-  /users/{id}:
-     get:
-         summary: Get one single User
-         description: Returns a user with a specified Id
-         parameters:
-           - name: id
-             in: path
-             schema:
-               type: integer
-         responses:
-            200:
-              description: Success
-            403:
-              description: Only admins can see this
-            404:
-              description: No posts found
-            500:
-              description: Internal Server error
-
-# Edit User
-
-  /users/edit/{id}:
-     put:
-         summary: Edit User Profile
-         description: Admins and the given user can edit.
+ 
+  /posts/like:
+     post:
+         summary: Like or Dislike a Post
+         description: This endpoint takes postId in the req body and controls likes and disliking of a post, it stores the id's of users who likes the post in an array.
          consumes:
-             - multipart/form-data
-         produces:
-            - application/json
+           application/json
          parameters:
+          - in: body
+            name: Like a post
+            schema:
+               type: object
+               properties: 
+                 postId: 
+                   type: string
+         responses:
+             200:
+               description: Success
+  # Bookmark a Post
+  /posts/bookmark:
+     post:
+         summary: Bookmark a post
+         description: This endpoint allows you to bookmark a post for later reading, it takes the postId in the body.
+         consumes:
+           application/json
+         parameters:
+          - in: body
+            name: Bookmark
+            schema:
+               type: object
+               properties: 
+                 postId: 
+                   type: string
+         responses:
+             200:
+               description: Success
+             500:
+               description: Internal Server Error
+
+# Return a single User's all bookmarked posts
+  /posts/bookmark/{userId}:
+    get:
+     summary: Get all bookmarked posts of a particular user
+     description: This endpoint returns all all bookmarked posts of a particular user
+     produces:
+           - application/json
+     consumes:
+           - application/json
+     parameters:
+           - name: userId
+             in: path
+             schema:
+               type: integer
+     responses:
+          200:
+            description: Success
+          204:
+            description: "No Bookmark Found"
+          403:
+             description: You're not authenticated
+          500:
+             description: Internal Server Error
+
+# Handle Comment Routes
+  /comments/create:
+    post:
+     summary: Drop a Comment
+     description: Both Logged in and Non Logged in user can drop a comment, a non logged in user will have to provide additional details of name and email particulars before they can submit a comment.
+     produces:
+           - application/json
+     consumes:
+           - application/json
+     parameters:
+           - name: postId
+             in: path
+             schema:
+               type: integer
+           - in: body
+             name: comment
+             schema:
+               type: string
+               properties: 
+                 full_name:
+                   type: string
+                 email:
+                   type: string
+                 comment:
+                   type: string
+                 
+     responses:
+          201:
+            description: Success
+          403:
+             description: You're not authenticated
+          500:
+             description: Internal Server Error
+
+# Edit Comment
+  /comments/edit/{id}:
+    put:
+     summary: Edit Comment
+     description: Admins/Editor and post authors can edit post.
+     produces:
+           - application/json
+     consumes:
+           - application/json
+     parameters:
            - name: id
              in: path
              schema:
                type: integer
-           - in: formData
-             name: image
-             type: file
-             description: Change profile picture
-           - in: formData
-             name: username
-             type: string
-             description: Username
-           - in: formData
-             name: firstname
-             type: string
-             description: First Name
-           - in: formData
-             name: lastname
-             type: string
-             description: Last Name
-           - in: formData
-             name: email
-             type: string
-             description: Email
-           - in: formData
-             name: password
-             type: string
-             description: Password
-         responses:
-            201:
-              description: Success
-            403:
-              description: You're not authenticated
-            500:
-              description: Internal Server Error
-
-
- 
-# Delete a User
-  /users/delete/{id}:
-     delete:
-         summary: Delete A user
-         description: Admins and the given user can delete.
-         parameters:
+           - in: body
+             name: comment
+             schema:
+               type: string
+               properties: 
+                 comment:
+                   type: string 
+     responses:
+          201:
+            description: Success
+          403:
+             description: You're not authenticated
+          500:
+             description: Internal Server Error
+  # Delete Comment
+  /comments/delete/{id}:
+    delete:
+     summary: Delete Comment
+     description: Admins/Editor and comment authors can delete post.
+     produces:
+           - application/json
+     consumes:
+           - application/json
+     parameters:
            - name: id
              in: path
              schema:
                type: integer
-         responses:
-            200:
-              description: Success
-            403:
-              description: You're not authenticated
-            500:
-              description: Internal Server Error
+     responses:
+          200:
+            description: Success
+          403:
+             description: You're not authenticated
+          500:
+             description: Internal Server Error
+
+  /comments/all/{postId}:
+    get:
+     summary: All comments from a single Post
+     description: This endpoint returns all comments that was made on a singular post noted by postId
+     produces:
+           - application/json
+     consumes:
+           - application/json
+     parameters:
+           - name: postId
+             in: path
+             schema:
+               type: integer
+     responses:
+          200:
+            description: Success
+          204:
+             description: No post found
+          500:
+             description: Internal Server Error
 
 
- 

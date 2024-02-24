@@ -21,6 +21,8 @@ const postSchema = new mongoose.Schema(
       unique: true,
       slug_padding_size: 2,
     },
+    likes: { type: Array, default: [] },
+    bookmarks: { type: Array, default: [] },
     image: String,
     snippet: String,
     status: {
