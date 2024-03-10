@@ -1,5 +1,4 @@
 const Category = require("../models/CategoryModel");
-const logger = require("../../logger")
 
 
 module.exports = {

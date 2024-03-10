@@ -1,5 +1,4 @@
 const Comment = require("../models/Comments");
-const logger = require("../../logger")
 const Post = require("../models/PostModel")
 
 

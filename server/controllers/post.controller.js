@@ -1,15 +1,24 @@
 const Post = require("../models/PostModel");
-const logger = require("../../logger");
 const User = require("../models/UserModel");
+const {countWordsLength} = require("../utils/countWords")
 
 module.exports = {
   createPost: async (req, res) => {
     try {
-      const { title } = req.body;
+      const { title, desc } = req.body;
+
+      console.log(req.body)
 
       if (!title.trim()) {
         return res.status(403).json({ msg: "Post title is required" });
       }
+      
+      // Confirm that total words in the post is up to 700 words.
+       const wordlength = countWordsLength(desc);
+
+       if(wordlength < 700){
+        return res.status(403).json({msg: `Minimum words length: 700 words, You've written : ${wordlength} words`})
+       }
 
       req.body.author = req.session.user._id;
       const newPost = await Post.create(req.body);
@@ -234,7 +243,7 @@ module.exports = {
       logger.error(error);
     }
   },
-  bookmark: async (req, res) => {
+  bookmarkAPost: async (req, res) => {
     // Extract current postId from the body
 
     const { postId } = req.body;

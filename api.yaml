@@ -80,6 +80,89 @@ paths:
             500:
               description: Internal Server Error
        
+  /secure/forgotpassword:
+     post:
+         summary: Forgot Password 
+         description: Registered users can enter their email and receive OTP from their email
+         produces:
+           - application/json
+         consumes:
+           - application/json
+         parameters:
+           - in: body 
+             name: Enter email
+             schema:
+               type: object
+               properties:
+                  email: 
+                    type: string
+                    required: true     
+         responses:
+            200:
+              description: successfullly Sent you OTP
+            422:
+              description: User Error or Server Error
+           
+       
+  /secure/verifyotp:
+     post:
+         summary: Verify OTP 
+         description: OTP received from user's email can be verified in this route, userId and the otp will be provided in the body before this verification process will be successfull
+         produces:
+           - application/json
+         consumes:
+           - application/json
+         parameters:
+           - in: body 
+             name: Enter OTP
+             schema:
+               type: object
+               properties:
+                  userId: 
+                    type: string
+                    required: true     
+                  otp: 
+                    type: string
+                    required: true     
+         responses:
+            201:
+              description: successfull
+            422:
+              description: User Error or Server Error
+
+  /secure/resetpassword/{id}:
+     put:
+         summary: Reset Password
+         description: Here you'd be able to create new password after you've verified your OTP, password and password2 must match for the action to succeed, also password length must be morethan 6 characters
+         produces:
+           - application/json
+         consumes:
+           - application/json
+         parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: body
+             name: New Password
+             schema:
+               type: string
+               properties: 
+                 password:
+                   type: string 
+                 password2:
+                   type: string 
+         responses:
+            201:
+              description: Success
+            403:
+              description: Unauthorized Action
+            404:
+              description: User not found
+            422:
+              description: User or Server Error
+          
+       
   /secure/logout:
        get:
          summary: Logout a user and Kill a session 
@@ -316,11 +399,13 @@ paths:
         name: category
         type: string
         enum: ["Educational", "Schooling", "Banking", "Finances"]
-      - in: formData
-        name: description
-        type: string
-        description: Write post content
-        format: textarea
+      - in: body
+        name: desc
+        schema:
+           type: object
+           properties:
+             desc: 
+               type: string
       
      responses:
         200:
@@ -632,6 +717,114 @@ paths:
             description: Success
           204:
              description: No post found
+          500:
+             description: Internal Server Error
+
+# Trade Signal and Trade Indicators
+  /trades/create:
+     post:
+       summary: Create Trade Signal
+       description: This endpoint allows Admins or Partners to Create Trade signals.
+       consumes:
+         - application/json
+       produces:
+         - application/json
+       parameters:
+           - in: body 
+             name: Create Signal
+             schema:
+               type: object
+               properties:
+                  symbol: 
+                    type: string        
+                  stopLoss: 
+                    type: integer     
+                  takeProfit: 
+                    type: integer     
+                  entryTime: 
+                    type: string     
+                  endTime: 
+                    type: string     
+       responses:
+          201:
+            description: Success
+          204:
+             description: No post found
+          403:
+            description: Partner Access required
+          500:
+             description: Internal Server Error
+
+  /trades/edit/{id}:
+     put:
+       summary: Edit Trade Signal
+       description: This endpoint allows the Partner that created the signal to edit.
+       consumes:
+         - application/json
+       produces:
+         - application/json
+       parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+           - in: body 
+             name: Edit Signal
+             schema:
+               type: object
+               properties:
+                  symbol: 
+                    type: string        
+                  stopLoss: 
+                    type: integer     
+                  takeProfit: 
+                    type: integer     
+                  entryTime: 
+                    type: string     
+                  endTime: 
+                    type: string     
+       responses:
+          201:
+            description: Success
+          204:
+             description: No post found
+          403:
+            description: Partner Access required
+          500:
+             description: Internal Server Error
+
+  /trades/delete/{id}:
+     delete:
+       summary: Delete Trade Signal
+       description: This endpoint allows the Partner or an Admin that created the signal to Delete.
+       parameters:
+           - name: id
+             in: path
+             schema:
+               type: integer
+       responses:
+          201:
+            description: Success
+          204:
+             description: No post found
+          403:
+            description: Partner Access required
+          500:
+             description: Internal Server Error
+
+  /trades/all:
+     get:
+       summary: Get All trade Signals
+       description: This endpoint returns All trade Signals and its open to both logged in and  non-logged in users
+       produces:
+         - application/json
+       responses:
+          200:
+            description: Success
+          204:
+             description: No Signal found
+          403:
+            description: Partner Access required
           500:
              description: Internal Server Error
 

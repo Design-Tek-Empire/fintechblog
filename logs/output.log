@@ -1,56 +1,274 @@
-[24-02-2024 10:40:31] ERROR: unknown top level operator: $in. If you have a field name that starts with a '$' symbol, consider using $getField or $setField.
+[27-02-2024 14:30:24] WARN: Login required
+[27-02-2024 15:29:37] WARN: Login required
+[27-02-2024 15:30:12] FATAL: Admin or Partner Access Required
+[27-02-2024 15:32:32] ERROR: Cannot read properties of null (reading 'proTrader')
     err: {
-      "type": "MongoServerError",
-      "message": "unknown top level operator: $in. If you have a field name that starts with a '$' symbol, consider using $getField or $setField.",
+      "type": "TypeError",
+      "message": "Cannot read properties of null (reading 'proTrader')",
       "stack":
-          MongoServerError: unknown top level operator: $in. If you have a field name that starts with a '$' symbol, consider using $getField or $setField.
-              at Connection.onMessage (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\node_modules\mongodb\lib\cmap\connection.js:230:30)
-              at MessageStream.<anonymous> (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\node_modules\mongodb\lib\cmap\connection.js:61:60)
-              at MessageStream.emit (node:events:514:28)
-              at processIncomingData (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\node_modules\mongodb\lib\cmap\message_stream.js:125:16)
-              at MessageStream._write (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\node_modules\mongodb\lib\cmap\message_stream.js:33:9)
-              at writeOrBuffer (node:internal/streams/writable:556:12)
-              at _write (node:internal/streams/writable:490:10)
-              at Writable.write (node:internal/streams/writable:494:10)
-              at Socket.ondata (node:internal/streams/readable:985:22)
-              at Socket.emit (node:events:514:28)
-      "ok": 0,
-      "code": 2,
-      "codeName": "BadValue"
+          TypeError: Cannot read properties of null (reading 'proTrader')
+              at deleteSignal (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\trade.controller.js:55:43)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
     }
-[24-02-2024 13:09:53] ERROR: user is not defined
+[10-03-2024 05:46:51] ERROR: Provide your email
     err: {
-      "type": "ReferenceError",
-      "message": "user is not defined",
+      "type": "Error",
+      "message": "Provide your email",
       "stack":
-          ReferenceError: user is not defined
-              at userBookmarks (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:285:5)
-              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
-              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
-              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:9:14)
+          Error: Provide your email
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:107:24)
               at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
               at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
               at Route.dispatch (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:114:3)
               at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
               at C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:284:15
-              at param (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:365:14)
+              at Function.process_params (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:346:12)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:280:10)
+              at Function.handle (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:175:3)
+              at router (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:47:12)
     }
-[24-02-2024 13:37:17] WARN: Login required
-[24-02-2024 13:37:59] ERROR: bookmarks is not defined
+[10-03-2024 05:46:57] ERROR: Provide your email
     err: {
-      "type": "ReferenceError",
-      "message": "bookmarks is not defined",
+      "type": "Error",
+      "message": "Provide your email",
       "stack":
-          ReferenceError: bookmarks is not defined
-              at userBookmarks (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:289:56)
-              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
-              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
-              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:9:14)
+          Error: Provide your email
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:107:24)
               at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
               at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
               at Route.dispatch (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:114:3)
               at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
               at C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:284:15
-              at param (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:365:14)
+              at Function.process_params (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:346:12)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:280:10)
+              at Function.handle (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:175:3)
+              at router (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:47:12)
     }
-[24-02-2024 15:32:21] WARN: Login required
+[10-03-2024 05:47:59] ERROR: Provide your email
+    err: {
+      "type": "Error",
+      "message": "Provide your email",
+      "stack":
+          Error: Provide your email
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:107:40)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at Route.dispatch (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:114:3)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:284:15
+              at Function.process_params (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:346:12)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:280:10)
+              at Function.handle (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:175:3)
+              at router (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:47:12)
+    }
+[10-03-2024 05:49:11] ERROR: Email is Invalid
+    err: {
+      "type": "Error",
+      "message": "Email is Invalid",
+      "stack":
+          Error: Email is Invalid
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:108:66)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at Route.dispatch (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:114:3)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:284:15
+              at Function.process_params (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:346:12)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:280:10)
+              at Function.handle (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:175:3)
+              at router (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:47:12)
+    }
+[10-03-2024 05:49:19] ERROR: Email is Invalid
+    err: {
+      "type": "Error",
+      "message": "Email is Invalid",
+      "stack":
+          Error: Email is Invalid
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:108:66)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at Route.dispatch (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:114:3)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:284:15
+              at Function.process_params (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:346:12)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:280:10)
+              at Function.handle (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:175:3)
+              at router (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\index.js:47:12)
+    }
+[10-03-2024 05:52:28] ERROR: Unknown credentials
+    err: {
+      "type": "Error",
+      "message": "Unknown credentials",
+      "stack":
+          Error: Unknown credentials
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:112:29)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[10-03-2024 06:14:00] ERROR: Unknown credentials
+    err: {
+      "type": "Error",
+      "message": "Unknown credentials",
+      "stack":
+          Error: Unknown credentials
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:114:29)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[10-03-2024 07:52:11] ERROR: Please enter your password to continue
+    err: {
+      "type": "Error",
+      "message": "Please enter your password to continue",
+      "stack":
+          Error: Please enter your password to continue
+              at resetpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:190:16)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[10-03-2024 07:53:06] ERROR: Please enter your password to continue
+    err: {
+      "type": "Error",
+      "message": "Please enter your password to continue",
+      "stack":
+          Error: Please enter your password to continue
+              at resetpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:190:16)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[10-03-2024 07:53:29] ERROR: Passwords don't match
+    err: {
+      "type": "Error",
+      "message": "Passwords don't match",
+      "stack":
+          Error: Passwords don't match
+              at resetpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:192:16)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[10-03-2024 07:53:47] ERROR: Password must be at least 6 characters long
+    err: {
+      "type": "Error",
+      "message": "Password must be at least 6 characters long",
+      "stack":
+          Error: Password must be at least 6 characters long
+              at resetpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:194:16)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[10-03-2024 08:59:19] ERROR: Your previous OTP is still Valid, Use it
+    err: {
+      "type": "Error",
+      "message": "Your previous OTP is still Valid, Use it",
+      "stack":
+          Error: Your previous OTP is still Valid, Use it
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:118:37)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[10-03-2024 09:04:55] ERROR: Your previous OTP is still Valid, Use it
+    err: {
+      "type": "Error",
+      "message": "Your previous OTP is still Valid, Use it",
+      "stack":
+          Error: Your previous OTP is still Valid, Use it
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:118:34)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[10-03-2024 09:23:26] WARN: Login required
+[10-03-2024 09:24:13] ERROR: countWordsLength is not a function
+    err: {
+      "type": "TypeError",
+      "message": "countWordsLength is not a function",
+      "stack":
+          TypeError: countWordsLength is not a function
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:16:27)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:74:5)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:6:14)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at Route.dispatch (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:114:3)
+    }
+[10-03-2024 09:24:54] ERROR: Cannot read properties of undefined (reading 'split')
+    err: {
+      "type": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'split')",
+      "stack":
+          TypeError: Cannot read properties of undefined (reading 'split')
+              at module.exports.countWordsLength (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\utils\countWords.js:3:22)
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:16:27)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:74:5)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:6:14)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+    }
+[10-03-2024 09:32:22] ERROR: Cannot read properties of undefined (reading 'split')
+    err: {
+      "type": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'split')",
+      "stack":
+          TypeError: Cannot read properties of undefined (reading 'split')
+              at module.exports.countWordsLength (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\utils\countWords.js:3:22)
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:16:27)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:74:5)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:6:14)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+    }
+[10-03-2024 09:33:33] ERROR: wordlength is not defined
+    err: {
+      "type": "ReferenceError",
+      "message": "wordlength is not defined",
+      "stack":
+          ReferenceError: wordlength is not defined
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:18:8)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:74:5)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:6:14)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at Route.dispatch (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:114:3)
+    }
+[10-03-2024 09:35:04] ERROR: Cannot read properties of undefined (reading 'split')
+    err: {
+      "type": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'split')",
+      "stack":
+          TypeError: Cannot read properties of undefined (reading 'split')
+              at module.exports.countWordsLength (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\utils\countWords.js:3:22)
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:17:27)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:74:5)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:6:14)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+    }
+[10-03-2024 09:36:17] WARN: Login required
+[10-03-2024 09:43:22] WARN: Login required
+[10-03-2024 09:43:59] ERROR: Cannot read properties of undefined (reading 'split')
+    err: {
+      "type": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'split')",
+      "stack":
+          TypeError: Cannot read properties of undefined (reading 'split')
+              at module.exports.countWordsLength (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\utils\countWords.js:3:22)
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:17:27)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:74:5)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:6:14)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+    }

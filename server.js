@@ -13,6 +13,7 @@ const compression = require("compression");
 const swaggerUI = require("swagger-ui-express")
 const YAML = require("yamljs")
 const swaggerJsDoc = YAML.load("./api.yaml") // Load the documentation file for swagger
+const logger = require("./logger")
 
 
 
@@ -88,7 +89,8 @@ app.use((req, res, next) => {
     next();
 });
 
-
+// set Logger globally
+global.logger = logger
 
 
 
@@ -105,6 +107,7 @@ app.use("/posts", require("./server/routes/postRoute")) // Posts Route
 app.use("/categories", require("./server/routes/categoryRoute")); // Category Route
 app.use("/users", require("./server/routes/userRoute")) // User Route
 app.use("/comments", require("./server/routes/commentRoute")) // Comments Route
+app.use("/trades", require("./server/routes/tradeRoute"))
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc)) // Configure Swager documention 
 
 
