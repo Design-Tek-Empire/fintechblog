@@ -13,7 +13,7 @@ module.exports = {
 
       // email sending options
       const mailOptions = {
-        from: '"OTP Verification"<support@cheapay.com.ng>',
+        from: '"OTP Verification"<info@mail>',
         to: user.email,
         subject: "Verify Your Email",
         html: otpEmailTemplate(otp, "15 Minutes"),

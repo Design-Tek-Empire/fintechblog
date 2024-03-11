@@ -272,3 +272,75 @@
               at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
               at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
     }
+[11-03-2024 18:18:28] ERROR: Your previous OTP is still Valid, Use it
+    err: {
+      "type": "Error",
+      "message": "Your previous OTP is still Valid, Use it",
+      "stack":
+          Error: Your previous OTP is still Valid, Use it
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:118:34)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[11-03-2024 18:19:48] FATAL: Mail command failed: 550 5.7.1 Sending from domain cheapay.com.ng is not allowed
+    err: {
+      "type": "Error",
+      "message": "Mail command failed: 550 5.7.1 Sending from domain cheapay.com.ng is not allowed",
+      "stack":
+          Error: Mail command failed: 550 5.7.1 Sending from domain cheapay.com.ng is not allowed
+              at SMTPConnection._formatError (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:790:19)
+              at SMTPConnection._actionMAIL (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:1594:34)
+              at SMTPConnection.<anonymous> (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:1063:18)
+              at SMTPConnection._processResponse (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:969:20)
+              at SMTPConnection._onData (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:755:14)
+              at SMTPConnection._onSocketData (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:193:44)
+              at TLSSocket.emit (node:events:514:28)
+              at addChunk (node:internal/streams/readable:545:12)
+              at readableAddChunkPushByteMode (node:internal/streams/readable:495:3)
+              at Readable.push (node:internal/streams/readable:375:5)
+      "code": "EENVELOPE",
+      "response": "550 5.7.1 Sending from domain cheapay.com.ng is not allowed",
+      "responseCode": 550,
+      "command": "MAIL FROM"
+    }
+[11-03-2024 18:22:48] ERROR: Your previous OTP is still Valid, Use it
+    err: {
+      "type": "Error",
+      "message": "Your previous OTP is still Valid, Use it",
+      "stack":
+          Error: Your previous OTP is still Valid, Use it
+              at forgotpassword (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\auth.controller.js:118:34)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[11-03-2024 18:23:11] FATAL: Can't send mail - all recipients were rejected: 554 5.7.1 Demo domains can only be used to send emails to account owners. You can only send testing emails to your own email address.
+    err: {
+      "type": "Error",
+      "message": "Can't send mail - all recipients were rejected: 554 5.7.1 Demo domains can only be used to send emails to account owners. You can only send testing emails to your own email address.",
+      "stack":
+          Error: Can't send mail - all recipients were rejected: 554 5.7.1 Demo domains can only be used to send emails to account owners. You can only send testing emails to your own email address.
+              at SMTPConnection._formatError (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:790:19)
+              at SMTPConnection._actionRCPT (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:1654:28)
+              at SMTPConnection.<anonymous> (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:1607:30)
+              at SMTPConnection._processResponse (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:969:20)
+              at SMTPConnection._onData (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:755:14)
+              at SMTPConnection._onSocketData (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\nodemailer\lib\smtp-connection\index.js:193:44)
+              at TLSSocket.emit (node:events:514:28)
+              at addChunk (node:internal/streams/readable:545:12)
+              at readableAddChunkPushByteMode (node:internal/streams/readable:495:3)
+              at Readable.push (node:internal/streams/readable:375:5)
+      "code": "EENVELOPE",
+      "response": "554 5.7.1 Demo domains can only be used to send emails to account owners. You can only send testing emails to your own email address.",
+      "responseCode": 554,
+      "command": "RCPT TO",
+      "rejected": [
+        "bayo@yopmail.com"
+      ],
+      "rejectedErrors": [
+        {
+          "code": "EENVELOPE",
+          "response": "554 5.7.1 Demo domains can only be used to send emails to account owners. You can only send testing emails to your own email address.",
+          "responseCode": 554,
+          "command": "RCPT TO",
+          "recipient": "bayo@yopmail.com"
+        }
+      ]
+    }
