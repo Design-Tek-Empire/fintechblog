@@ -94,8 +94,6 @@ global.logger = logger
 
 
 
-
-
 // load static files
 app.use("/img", express.static(path.resolve(__dirname, "./public/img")));
 
@@ -104,7 +102,7 @@ app.get("/", (req, res) => {
   res
     .status(200)
     .send(
-      `<H1 style="background-color: teal; color : #fff; text-align: center; padding: 20px" >WELCOME To Veerified Fintech Blog. !!!</h1> <br> <br> <span style = "font-size: 12px"> Developed by Udeze Ernest and team</span>`
+      `<H1 style="background-color: teal; color : #fff; text-align: center; padding: 20px" >WELCOME To Veerified Fintech Blog. !!!</h1> <br> <br> <span style = "font-size: 12px"> Developed by Udeze Ernest and team</span> <br> <br> <h3><a href="/api-docs">Click Here For Documentaion</a>  </h3>`
     );
 });
 
