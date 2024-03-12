@@ -100,6 +100,12 @@ global.logger = logger
 app.use("/img", express.static(path.resolve(__dirname, "./public/img")));
 
 
+app.get("/", (req, res)=>{
+
+  res.send(`<h1 style="text-align: center; color: teal;" >Welcome to Veerified Fintech Blog API <br> Developed by Udeze Ernest</h1>`)
+})
+
+
 
 // API EndPoints
 app.use("/secure", require("./server/routes/authRoute")); // Auth Route
