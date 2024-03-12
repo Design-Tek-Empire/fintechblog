@@ -100,10 +100,14 @@ global.logger = logger
 app.use("/img", express.static(path.resolve(__dirname, "./public/img")));
 
 
-app.get("/", (req, res)=>{
+app.get("/", (req, res) => {
+  res
+    .status(200)
+    .send(
+      `<H1 style="background-color: teal; color : #fff; text-align: center; padding: 20px" >WELCOME To Veerified Fintech Blog. !!!</h1> <br> <br> <span style = "font-size: 12px"> Developed by Udeze Ernest and team</span>`
+    );
+});
 
-  res.send(`<h1 style="text-align: center; color: teal;" >Welcome to Veerified Fintech Blog API <br> Developed by Udeze Ernest</h1>`)
-})
 
 
 
