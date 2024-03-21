@@ -344,3 +344,38 @@
         }
       ]
     }
+[21-03-2024 11:04:34] ERROR: Cannot read properties of undefined (reading 'split')
+    err: {
+      "type": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'split')",
+      "stack":
+          TypeError: Cannot read properties of undefined (reading 'split')
+              at module.exports.countWordsLength (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\utils\countWords.js:3:22)
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:16:27)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:74:5)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:6:14)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+    }
+[21-03-2024 11:07:38] ERROR: Cannot read properties of undefined (reading 'split')
+    err: {
+      "type": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'split')",
+      "stack":
+          TypeError: Cannot read properties of undefined (reading 'split')
+              at module.exports.countWordsLength (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\utils\countWords.js:3:22)
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:16:27)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:74:5)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at authenticateUser (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\authorisation.js:6:14)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+    }
+[21-03-2024 11:47:23] WARN: Login required

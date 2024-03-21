@@ -7,14 +7,13 @@ module.exports = {
     try {
       const { title, desc } = req.body;
 
-      console.log(req.body)
 
       if (!title.trim()) {
         return res.status(403).json({ msg: "Post title is required" });
       }
       
       // Confirm that total words in the post is up to 700 words.
-       const wordlength = countWordsLength(desc);
+        const wordlength = countWordsLength(desc);
 
        if(wordlength < 700){
         return res.status(403).json({msg: `Minimum words length: 700 words, You've written : ${wordlength} words`})

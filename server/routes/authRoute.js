@@ -4,6 +4,7 @@ const {usernameToLowerCase} = require("../middlewares/authorisation");
 const authController = require("../controllers/auth.controller")
 
 
+
 router.post("/register", usernameToLowerCase, authController.register); // Create User
 router.post("/login", usernameToLowerCase, authController.login ) // Actuall Login
 router.post("/forgotpassword", authController.forgotpassword )// Request for password Reset

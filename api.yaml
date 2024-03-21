@@ -102,8 +102,7 @@ paths:
               description: successfullly Sent you OTP
             422:
               description: User Error or Server Error
-           
-       
+                
   /secure/verifyotp:
      post:
          summary: Verify OTP 
@@ -161,8 +160,7 @@ paths:
               description: User not found
             422:
               description: User or Server Error
-          
-       
+              
   /secure/logout:
        get:
          summary: Logout a user and Kill a session 
@@ -172,7 +170,6 @@ paths:
               description: Logged out successfullly
             500:
               description: Internal Server Error
-  
   
 # Users Route
   /users/:
@@ -379,41 +376,37 @@ paths:
               description: Category Already Exists
             500:
               description: Internal Server Error
-  
+ 
   /posts/create:
-    post:
-     summary: Create a post
-     consumes:
-      - multipart/form-data
-     parameters:
-      - in: formData
-        name: image
-        type: file
-        description: File Upload
-      - in: formData
-        name: title
-        type: string
-        required: true
-        description: Enter post title
-      - in: formData
-        name: category
-        type: string
-        enum: ["Educational", "Schooling", "Banking", "Finances"]
-      - in: body
-        name: desc
-        schema:
-           type: object
-           properties:
-             desc: 
-               type: string
-      
-     responses:
-        200:
-          description: Success
-        403:
-          description: You're not authenticated
-        500:
-          description: Internal Server Error
+      post:
+          summary: Create Post
+          consumes:
+            - multipart/form-data
+          parameters:
+            - in: formData
+              name: image
+              type: file
+              description: file upload
+            - in: formData
+              name: title
+              type: string
+              required: true
+              description: Enter Post Title
+            - in: formData
+              name: category
+              type: string
+              enum: ["Educational", "Schooling", "Banking", "Finances"]
+            - in: formData
+              name: desc
+              type: string
+          responses:
+              200:
+                description: Success
+              403:
+                description: You're not authenticated
+              500:
+                description: Internal Server Error
+         
 
   /posts/approve/{id}:
      put:
