@@ -1,4 +1,3 @@
-
 module.exports = {
   //
   authenticateUser: (req, res, next) => {
@@ -20,8 +19,11 @@ module.exports = {
 
   // Should be an admin or Editor to have the ability
   isAdminOrEditor: (req, res, next) => {
-    if (req.session.user.role != "Contributor") {
-      return next();
+    if (
+      req.session.user &&
+      ["Admin", "Editor"].includes(req.session.user.role)
+    ) {
+       next();
     } else {
       logger.warn("Higher Access Level Required");
       return res.status(403).json({ msg: "Higher Access Level Required" });
@@ -68,6 +70,4 @@ module.exports = {
     }
     next();
   },
-
- 
 };

@@ -173,7 +173,7 @@ module.exports = {
 
     try {
       // Get all posts
-      let posts = await Post.find()
+      let posts = await Post.find({status: "Approved"})
         .populate([
           { path: "author", select: "-password -updatedAt -createdAt" },
         ])
@@ -203,7 +203,7 @@ module.exports = {
 
   viewSinglePost: async (req, res) => {
     try {
-      const post = await Post.findById(req.params.id).populate([
+      const post = await Post.findOne({slug: req.params.slug}).populate([
         { path: "author", select: "-password -updatedAt -createdAt" },
       ]);
 

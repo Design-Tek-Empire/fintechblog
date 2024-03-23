@@ -529,12 +529,12 @@ paths:
             500:
               description: Internal server Error
 # Get A single post
-  /posts/{id}:
+  /posts/{slug}:
      get:
          summary: Get a single Post specified by id
          description: Return a single post from the database
          parameters:
-           - name: id
+           - name: slug
              in: path
              schema:
                type: string
