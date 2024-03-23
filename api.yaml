@@ -14,7 +14,7 @@ servers:
   -liveurl: http://fintechblog.com
   Live-description: This is the company website
 
-schemes: [http, https]
+schemes: [https]
 
 # API ENDPOINTS
 
