@@ -381,3 +381,47 @@
 [21-03-2024 11:47:23] WARN: Login required
 [22-03-2024 19:02:37] WARN: Login required
 [23-03-2024 04:57:43] WARN: Higher Access Level Required
+[27-03-2024 19:58:17] ERROR: Cannot read properties of undefined (reading 'split')
+    err: {
+      "type": "TypeError",
+      "message": "Cannot read properties of undefined (reading 'split')",
+      "stack":
+          TypeError: Cannot read properties of undefined (reading 'split')
+              at module.exports.countWordsLength (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\utils\countWords.js:3:22)
+              at createPost (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\controllers\post.controller.js:16:28)
+              at Layer.handle [as handle_request] (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\layer.js:95:5)
+              at next (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\express\lib\router\route.js:144:13)
+              at exports.compressImg (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\server\middlewares\cloudinary.js:76:5)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    }
+[29-03-2024 04:37:11] ERROR: Cast to ObjectId failed for value "{id}" (type string) at path "_id" for model "User"
+    err: {
+      "type": "CastError",
+      "message": "Cast to ObjectId failed for value \"{id}\" (type string) at path \"_id\" for model \"User\"",
+      "stack":
+          CastError: Cast to ObjectId failed for value "{id}" (type string) at path "_id" for model "User"
+              at model.Query.exec (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\query.js:4927:21)
+              at Query.then (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\query.js:5026:15)
+              at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      "stringValue": "\"{id}\"",
+      "kind": "ObjectId",
+      "value": "{id}",
+      "path": "_id",
+      "reason": {
+        "type": "BSONTypeError",
+        "message": "Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer",
+        "stack":
+            BSONTypeError: Argument passed in must be a string of 12 bytes or a string of 24 hex characters or an integer
+                at new BSONTypeError (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\node_modules\bson\lib\error.js:41:28)
+                at new ObjectId (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\node_modules\bson\lib\objectid.js:67:23)
+                at castObjectId (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\cast\objectid.js:25:12)
+                at ObjectId.cast (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\schema\objectid.js:246:12)
+                at SchemaType.applySetters (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\schematype.js:1201:12)
+                at SchemaType._castForQuery (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\schematype.js:1648:15)
+                at SchemaType.castForQuery (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\schematype.js:1636:15)
+                at SchemaType.castForQueryWrapper (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\schematype.js:1612:20)
+                at cast (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\cast.js:349:32)
+                at Query.cast (C:\Users\ss\Desktop\Design Tech Empire\FintechBlog\node_modules\mongoose\lib\query.js:5357:12)
+      },
+      "valueType": "string"
+    }

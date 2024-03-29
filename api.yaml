@@ -14,7 +14,7 @@ servers:
   -liveurl: http://fintechblog.com
   Live-description: This is the company website
 
-schemes: [https]
+schemes: [http, https]
 
 # API ENDPOINTS
 
@@ -407,7 +407,6 @@ paths:
               500:
                 description: Internal Server Error
          
-
   /posts/approve/{id}:
      put:
          summary: Approve a Post
@@ -529,6 +528,22 @@ paths:
             500:
               description: Internal server Error
 # Get A single post
+  /posts/user/{userId}:
+     get:
+         summary: Get a single User All Posts
+         description: Return a single post from the database
+         parameters:
+           - name: userId
+             in: path
+             schema:
+               type: integer
+         responses:
+            200:
+              description: Success
+            204:
+              description: No posts found
+            500:
+              description: Internal Server error
   /posts/{slug}:
      get:
          summary: Get a single Post specified by id

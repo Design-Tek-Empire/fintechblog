@@ -15,6 +15,9 @@ router.put("/restore/:id", mustBeAdmin, postController.restoreDeletedPost) // Re
 
 
 router.get("/", postController.viewAllPosts); // view all Posts
+
+router.get("/user/:userId", postController.singleUserAllPosts); // Single User/s All Posts
+
 router.get("/:slug", postController.viewSinglePost); // view Single Post
 router.post("/like", authenticateUser, postController.likePost);
 

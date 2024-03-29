@@ -38,6 +38,7 @@ exports.compressImg = async (req, res, next) => {
 
       const imageFile = fileSystem.readFileSync(req.files.image.tempFilePath);
 
+
       // Extract the actual file name
       const fileName = req.files.image.name.replace(/\..+$/, "");
 

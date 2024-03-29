@@ -1,23 +1,28 @@
 const Post = require("../models/PostModel");
 const User = require("../models/UserModel");
-const {countWordsLength} = require("../utils/countWords")
+const { countWordsLength } = require("../utils/countWords");
 
 module.exports = {
   createPost: async (req, res) => {
     try {
       const { title, desc } = req.body;
 
-
       if (!title.trim()) {
         return res.status(403).json({ msg: "Post title is required" });
       }
-      
-      // Confirm that total words in the post is up to 700 words.
-        const wordlength = countWordsLength(desc);
 
-       if(wordlength < 700){
-        return res.status(403).json({msg: `Minimum words length: 700 words, You've written : ${wordlength} words`})
-       }
+      if (!desc) {
+        return res.status(403).json({ msg: "Provide Post Content" });
+      }
+
+      // Confirm that total words in the post is up to 700 words.
+      const wordlength = countWordsLength(desc);
+
+      if (wordlength < 700) {
+        return res.status(403).json({
+          msg: `Minimum words length: 700 words, You've written : ${wordlength} words`,
+        });
+      }
 
       req.body.author = req.session.user._id;
       const newPost = await Post.create(req.body);
@@ -173,7 +178,7 @@ module.exports = {
 
     try {
       // Get all posts
-      let posts = await Post.find({status: "Approved"})
+      let posts = await Post.find({ status: "Approved" })
         .populate([
           { path: "author", select: "-password -updatedAt -createdAt" },
         ])
@@ -201,9 +206,27 @@ module.exports = {
     }
   },
 
+  singleUserAllPosts: async (req, res) => {
+
+    try {
+
+      const userAllPosts = await Post.find({
+        author: req.params.userId,
+      }).populate([
+        { path: "author", select: "-password -updatedAt -createdAt" },
+      ]);
+
+      res.status(200).json(userAllPosts)
+      
+    } catch (error) {
+      logger.error(error);
+      res.status(500).send("Internal Server Error");
+    }
+  },
+
   viewSinglePost: async (req, res) => {
     try {
-      const post = await Post.findOne({slug: req.params.slug}).populate([
+      const post = await Post.findOne({ slug: req.params.slug }).populate([
         { path: "author", select: "-password -updatedAt -createdAt" },
       ]);
 
@@ -217,6 +240,7 @@ module.exports = {
       res.status(500).send("Internal Server Error");
     }
   },
+
   likePost: async (req, res) => {
     // Extract current postId from the body
 
