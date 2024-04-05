@@ -23,7 +23,7 @@ module.exports = {
       req.session.user &&
       ["Admin", "Editor"].includes(req.session.user.role)
     ) {
-       next();
+      next();
     } else {
       logger.warn("Higher Access Level Required");
       return res.status(403).json({ msg: "Higher Access Level Required" });
@@ -37,6 +37,16 @@ module.exports = {
       logger.fatal("Admin Access Required");
       return res.status(403).json({ msg: "Admin Access Required" });
     }
+  },
+
+  //Generate Access Token
+
+  generateAccessToken: (user, jwt) => {
+    return jwt.sign(
+      { id: user.id, role: user.role, email: user.email },
+      process.env.ACCESS_TOKEN_SECRETE,
+      { expiresIn: "1d" }
+    );
   },
 
   mustBeAdminOrPartner: (req, res, next) => {

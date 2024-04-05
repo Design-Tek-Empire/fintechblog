@@ -23,11 +23,6 @@ const logger = pino({
       },
     ],
   },
-  //   redact: ["password", "age"]
-  // redact: {
-  //   paths: ["password", "age"],
-  //   remove: true,
-  // },
 });
 
 module.exports = logger;

@@ -2,6 +2,8 @@ const User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const { sendOTPemail } = require("../utils/otp-sender");
 const OTPModel = require("../models/OTP-Record");
+const { generateAccessToken } = require("../middlewares/authorisation")
+const jwt = require("jsonwebtoken")
 
 // Hangle Registration
 module.exports = {
@@ -44,10 +46,10 @@ module.exports = {
           password: hashedPassword,
         });
 
-        const { password: hashedPasswordFromUser, ...otherUserDetails } =
-          user._doc;
+        // const { password: hashedPasswordFromUser, ...otherUserDetails } =
+        //   user._doc;
 
-        res.status(201).json(otherUserDetails);
+        res.status(201).json({success: true, message: "Registration successful"});
       }
     } catch (error) {
       logger.error(error);
@@ -90,10 +92,19 @@ module.exports = {
         return res.status(401).json({ msg: "Username or password Incorrect" });
       }
       // Password and username are correct, authorize the user and redirect to Dashboard
+      // Generate Tokens
+
       req.session.user = userExists;
       req.session.isAuthorized = true;
-      const { password: hashedPassword, ...others } = userExists._doc;
-      res.status(200).json(others);
+
+      const accessToken = generateAccessToken(userExists, jwt);
+      //  const { password: hashedPassword, ...userDetails } = userExists._doc;
+      res.send({
+        accessToken,
+        success: true,
+        msg: "Logged In",
+      });
+
     } catch (error) {
       logger.error(error);
       return res.status(500).json({ msg: "Internal server error" });
