@@ -98,9 +98,10 @@ module.exports = {
       req.session.isAuthorized = true;
 
       const accessToken = generateAccessToken(userExists, jwt);
-      //  const { password: hashedPassword, ...userDetails } = userExists._doc;
+      const {createdAt,updatedAt, password: hashedPassword, ...userDetails } = userExists._doc;
       res.send({
         accessToken,
+        userDetails,
         success: true,
         msg: "Logged In",
       });

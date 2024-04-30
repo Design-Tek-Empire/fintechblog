@@ -21,6 +21,8 @@ schemes: [http, https]
 paths:
   /secure/register:
      post:
+         tags:
+          - Auth Routes
          summary: Create a new User 
          description: This endpoint will create a new user and save to database
          produces:
@@ -52,6 +54,8 @@ paths:
   
   /secure/login:
      post:
+         tags:
+           - Auth Routes
          summary: Login a registered user 
          description: Only fully registered user can login through this route (Username Accepts Both Email and Username)
          produces:
@@ -82,6 +86,8 @@ paths:
        
   /secure/forgotpassword:
      post:
+         tags:
+           - Auth Routes
          summary: Forgot Password 
          description: Registered users can enter their email and receive OTP from their email
          produces:
@@ -105,6 +111,8 @@ paths:
                 
   /secure/verifyotp:
      post:
+         tags:
+          - Auth Routes
          summary: Verify OTP 
          description: OTP received from user's email can be verified in this route, userId and the otp will be provided in the body before this verification process will be successfull
          produces:
@@ -131,6 +139,8 @@ paths:
 
   /secure/resetpassword/{id}:
      put:
+         tags:
+          - Auth Routes
          summary: Reset Password
          description: Here you'd be able to create new password after you've verified your OTP, password and password2 must match for the action to succeed, also password length must be morethan 6 characters
          produces:
@@ -163,6 +173,8 @@ paths:
               
   /secure/logout:
        get:
+         tags:
+          - Auth Routes
          summary: Logout a user and Kill a session 
          description: This endpoint kills a live session and logs a user out completely        
          responses:
@@ -174,6 +186,8 @@ paths:
 # Users Route
   /users/:
      get:
+         tags:
+          - User Routes
          summary: Get array of all Users
          description: Admins can see a list of all users of the application
          produces:
@@ -189,6 +203,8 @@ paths:
               description: Internal Server error
   /users/{id}:
      get:
+         tags:
+          - User Routes
          summary: Get one single User
          description: Returns a user with a specified Id
          parameters:
@@ -207,6 +223,8 @@ paths:
               description: Internal Server error
   /users/edit/{id}:
      put:
+         tags:
+          - User Routes
          summary: Edit User Profile
          description: Admins and the given user can edit.
          consumes:
@@ -251,6 +269,8 @@ paths:
               description: Internal Server Error
   /users/delete/{id}:
      delete:
+         tags:
+          - User Routes
          summary: Delete A user
          description: Admins and the given user can delete.
          parameters:
@@ -267,6 +287,8 @@ paths:
               description: Internal Server Error
   /categories/:
      get:
+         tags:
+          - Category Routes
          summary: Return All Categories
          description: This returns all the created categories from the database
          produces:
@@ -283,6 +305,8 @@ paths:
   
   /categories/create:
      post:
+         tags:
+          - Category Routes
          summary: Create a new category
          description: Endpoint takes a category name as string and create a new category account in database
          produces:
@@ -309,6 +333,8 @@ paths:
   
   /categories/{id}:
      get:
+         tags:
+          - Category Routes
          summary: Get One category by its Id
          description: This returns a category specified by its id in parameters
          produces:
@@ -330,6 +356,8 @@ paths:
   
   /categories/edit/{id}:
      put:
+         tags:
+          - Category Routes
          summary: Edit a category specified by it id
          description: This endpoint edits any category as specified by its id in the params
          produces:
@@ -360,6 +388,8 @@ paths:
   
   /categories/delete/{id}:
      delete:
+         tags:
+          - Category Routes
          summary: Delete a category specified by it id
          description: This endpoint deletes any category as specified by its id in the params
          parameters:
@@ -379,6 +409,8 @@ paths:
  
   /posts/create:
       post:
+          tags:
+             - Post Routes
           summary: Create Post
           consumes:
             - multipart/form-data
@@ -409,6 +441,8 @@ paths:
          
   /posts/approve/{id}:
      put:
+         tags:
+          - Post Routes
          summary: Approve a Post
          description: Admins and editors can approve a post from this route
          parameters:
@@ -430,6 +464,8 @@ paths:
   
   /posts/edit/{id}:
      put:
+         tags:
+             - Post Routes
          summary: Edit  Post
          description: Admins and post authors can edit post.
          consumes:
@@ -464,6 +500,8 @@ paths:
 
   /posts/delete/{id}:
      delete:
+         tags:
+             - Post Routes
          summary: Delete a post specified by it id
          description: Approaved Posts can only be deleted by Admins and Editors, If an Editor deletes, reason for deleting the post will be provided and the final deletion of the post will await admin approval else the deleted post will be trashed into recycle bin. While unapproved posts can be deleted by anyone including the post author.
          parameters:
@@ -485,6 +523,8 @@ paths:
  
   /posts/restore/{id}:
      put:
+         tags:
+             - Post Routes
          summary: Restore a deleted post specified by it id
          description: Admin reserves the privilege to restore a post previously deleted by an Editor
          parameters:
@@ -506,6 +546,8 @@ paths:
  
   /posts/:
      get:
+         tags:
+             - Post Routes
          summary: Get all Posts & Query Posts by author or categories
          description: Query the database for posts based on category or the author.
          parameters:
@@ -530,6 +572,8 @@ paths:
 # Get A single post
   /posts/user/{userId}:
      get:
+         tags:
+             - Post Routes
          summary: Get a single User All Posts
          description: Return a single post from the database
          parameters:
@@ -546,6 +590,8 @@ paths:
               description: Internal Server error
   /posts/{slug}:
      get:
+         tags:
+             - Post Routes
          summary: Get a single Post specified by id
          description: Return a single post from the database
          parameters:
@@ -563,6 +609,8 @@ paths:
  
   /posts/like:
      post:
+         tags:
+             - Post Routes
          summary: Like or Dislike a Post
          description: This endpoint takes postId in the req body and controls likes and disliking of a post, it stores the id's of users who likes the post in an array.
          consumes:
@@ -581,6 +629,8 @@ paths:
   # Bookmark a Post
   /posts/bookmark:
      post:
+         tags:
+             - Post Routes
          summary: Bookmark a post
          description: This endpoint allows you to bookmark a post for later reading, it takes the postId in the body.
          consumes:
@@ -602,6 +652,8 @@ paths:
 # Return a single User's all bookmarked posts
   /posts/bookmark/{userId}:
     get:
+     tags:
+       - Post Routes
      summary: Get all bookmarked posts of a particular user
      description: This endpoint returns all all bookmarked posts of a particular user
      produces:
@@ -626,6 +678,8 @@ paths:
 # Handle Comment Routes
   /comments/create:
     post:
+     tags:
+      - Comment Routes
      summary: Drop a Comment
      description: Both Logged in and Non Logged in user can drop a comment, a non logged in user will have to provide additional details of name and email particulars before they can submit a comment.
      produces:
@@ -660,6 +714,8 @@ paths:
 # Edit Comment
   /comments/edit/{id}:
     put:
+     tags:
+      - Comment Routes
      summary: Edit Comment
      description: Admins/Editor and post authors can edit post.
      produces:
@@ -688,6 +744,8 @@ paths:
   # Delete Comment
   /comments/delete/{id}:
     delete:
+     tags:
+      - Comment Routes
      summary: Delete Comment
      description: Admins/Editor and comment authors can delete post.
      produces:
@@ -709,6 +767,8 @@ paths:
 
   /comments/all/{postId}:
     get:
+     tags:
+      - Comment Routes
      summary: All comments from a single Post
      description: This endpoint returns all comments that was made on a singular post noted by postId
      produces:
@@ -731,6 +791,8 @@ paths:
 # Trade Signal and Trade Indicators
   /trades/create:
      post:
+       tags:
+          - Trade Routes
        summary: Create Trade Signal
        description: This endpoint allows Admins or Partners to Create Trade signals.
        consumes:
@@ -765,6 +827,8 @@ paths:
 
   /trades/edit/{id}:
      put:
+       tags:
+          - Trade Routes
        summary: Edit Trade Signal
        description: This endpoint allows the Partner that created the signal to edit.
        consumes:
@@ -803,6 +867,8 @@ paths:
 
   /trades/delete/{id}:
      delete:
+       tags:
+          - Trade Routes
        summary: Delete Trade Signal
        description: This endpoint allows the Partner or an Admin that created the signal to Delete.
        parameters:
@@ -822,6 +888,8 @@ paths:
 
   /trades/all:
      get:
+       tags:
+          - Trade Routes
        summary: Get All trade Signals
        description: This endpoint returns All trade Signals and its open to both logged in and  non-logged in users
        produces:
