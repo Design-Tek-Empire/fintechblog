@@ -5,7 +5,7 @@ module.exports = {
       return next();
     } else {
       logger.warn("Login required");
-      return res.status(403).json("Login is Required");
+      return res.status(422).json("Login is Required");
     }
   },
   // Ensure user hasn't logged in
@@ -26,7 +26,7 @@ module.exports = {
       next();
     } else {
       logger.warn("Higher Access Level Required");
-      return res.status(403).json({ msg: "Higher Access Level Required" });
+      return res.status(422).json({ msg: "Higher Access Level Required" });
     }
   },
 
@@ -35,7 +35,7 @@ module.exports = {
       next();
     } else {
       logger.fatal("Admin Access Required");
-      return res.status(403).json({ msg: "Admin Access Required" });
+      return res.status(422).json({ msg: "Admin Access Required" });
     }
   },
 
@@ -57,7 +57,7 @@ module.exports = {
       next();
     } else {
       logger.fatal("Admin or Partner Access Required");
-      return res.status(403).json("Admin or Partner Access Required");
+      return res.status(422).json("Admin or Partner Access Required");
     }
   },
 
@@ -69,7 +69,7 @@ module.exports = {
       next();
     } else {
       logger.warn("Unauthorized Action");
-      return res.status(403).json({ msg: "Unauthorized Action" });
+      return res.status(422).json({ msg: "Unauthorized Action" });
     }
   },
 

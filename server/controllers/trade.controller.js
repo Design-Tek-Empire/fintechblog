@@ -31,7 +31,7 @@ module.exports = {
       const tradeSignal = await Trade.findById(req.params.id);
       // Validate user
       if (currentUser._id !== tradeSignal.proTrader.toString()) {
-        return res.status(403).json({ error: "Unauthorized" });
+        return res.status(422).json({ error: "Unauthorized" });
       }
       await tradeSignal.updateOne(
         {
@@ -56,7 +56,7 @@ module.exports = {
          return res.status(200).json("Signal deleted");
       }
 
-      return res.status(403).json({ error: "Unauthorized" });
+      return res.status(422).json({ error: "Unauthorized" });
      
     } catch (err) {
       logger.error(err);

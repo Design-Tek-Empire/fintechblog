@@ -146,7 +146,7 @@ module.exports = {
        // validate input.
 
        if (!otp) {
-         return res.status(403).json({ err: "Please provide OTP to proceed" });
+         return res.status(422).json({ err: "Please provide OTP to proceed" });
        } else if (!userId) {
          return res.status(401).json({ err: "Your account is not found " });
        } else {

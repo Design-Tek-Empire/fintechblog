@@ -8,18 +8,18 @@ module.exports = {
       const { title, desc } = req.body;
 
       if (!title.trim()) {
-        return res.status(403).json({ msg: "Post title is required" });
+        return res.status(422).json({ msg: "Post title is required" });
       }
 
       if (!desc) {
-        return res.status(403).json({ msg: "Provide Post Content" });
+        return res.status(422).json({ msg: "Provide Post Content" });
       }
 
       // Confirm that total words in the post is up to 700 words.
       const wordlength = countWordsLength(desc);
 
       if (wordlength < 700) {
-        return res.status(403).json({
+        return res.status(422).json({
           msg: `Minimum words length: 700 words, You've written : ${wordlength} words`,
         });
       }
@@ -163,7 +163,7 @@ module.exports = {
       });
 
       if (!updatedPost) {
-        return res.status(204).send("Post not found");
+        return res.status(404).send("Post not found");
       }
 
       return res.status(200).send("Post Restored");

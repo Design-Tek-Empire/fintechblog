@@ -10,9 +10,9 @@ module.exports = {
       if (!req.session.user) {
         // Blogger reader is not logged in
         if (full_name == "" || email == "") {
-          return res.status(403).json("Fill all input fields");
+          return res.status(422).json("Fill all input fields");
         } else if (comment.trim() == "") {
-          return res.status(403).json("You can't post an empty comment");
+          return res.status(422).json("You can't post an empty comment");
         }
 
         const newComment = await Comment.create({
@@ -31,7 +31,7 @@ module.exports = {
         // validate comment input
         if (comment == "") {
           logger.info("Empty Content not allowed");
-          return res.status(403).json("Empty Comment not allowed");
+          return res.status(422).json("Empty Comment not allowed");
         } else {
           const newComment = await Comment.create(req.body);
           res.status(201).json(newComment);
@@ -63,7 +63,7 @@ module.exports = {
           await comment.updateOne({ $set: req.body });
           res.status(201).json("Update Successfull");
         } else {
-          return res.status(403).json("Unauthorized Action");
+          return res.status(422).json("Unauthorized Action");
         }
       }
     } catch (error) {
@@ -94,7 +94,7 @@ module.exports = {
           await commentToDelete.deleteOne();
           res.status(201).json("Deleted Successfull");
         } else {
-          return res.status(403).json("Unauthorized Action");
+          return res.status(422).json("Unauthorized Action");
         }
       }
     } catch (error) {
